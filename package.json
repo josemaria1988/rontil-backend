@@ -1,0 +1,23 @@
+{
+  "name": "rontil-backend",
+  "version": "1.0.0",
+  "description": "Proyecto para curso de Backend CoderHouse de JOSE MARIA SOSA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josemaria1988/rontil-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josemaria1988/rontil-backend/issues"
+  },
+  "homepage": "https://github.com/josemaria1988/rontil-backend#readme",
+  "dependencies": {
+    "esm": "^3.2.25"
+  }
+}
