@@ -2,7 +2,8 @@
   "name": "rontil-backend",
   "version": "1.0.0",
   "description": "Proyecto para curso de Backend CoderHouse de JOSE MARIA SOSA",
-  "main": "index.js",
+  "main": "ProductManager.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +12,7 @@
     "url": "git+https://github.com/josemaria1988/rontil-backend.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "José María Sosa Izaguirre",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/josemaria1988/rontil-backend/issues"

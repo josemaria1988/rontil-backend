@@ -2,7 +2,7 @@ import fs from "fs";
 
 export default class ProductManager {
     constructor(path) {
-        this.path = path || 'products.json';
+        this.path = path || './products.json';
         this.products = [];
         this.productId = 0;
     }
@@ -19,39 +19,37 @@ export default class ProductManager {
 
     saveProducts = async () => {
         try {
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));
+            const data = JSON.stringify(this.products, null, 2);
+            await fs.promises.writeFile(this.path, data);
+            console.log("Productos guardados");
         } catch (error) {
-            console.error(`Error al escribir en el archivo ${this.path}: ${error}`);
+            console.error(`Error al guardar productos: ${error.message}`);
+            throw error;
         }
-    }
+    };
 
-    addProduct = async (title, description, price, thumbnail, code, stock) => {
-        if (!title || !description || !price || !thumbnail || !code || !stock) {
-            console.error("Error: Todos los campos son obligatorios");
-            return;
+    addProduct = async (product) => {
+        if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
+            throw new Error("Todos los campos son obligatorios");
         }
-
-        if (this.products.some((product) => product.code === code)) {
-            console.error(`Error: El código ${code} ya existe`)
-            return;
+    
+        if (this.products.some((p) => p.code === product.code)) {
+            throw new Error(`El código ${product.code} ya existe`);
         }
-
-        const product = {
+    
+        const newProduct = {
             id: ++this.productId,
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
+            ...product,
         };
-
-        this.products.push(product);
-
+    
+        this.products.push(newProduct);
+    
         await this.saveProducts();
-
-        console.log(`Producto agregado: ${product.title}`);
-    }
+    
+        console.log(`Producto agregado: ${newProduct.title}`);
+    
+        return newProduct;
+    };
 
     getProducts = async () => {
         try {
@@ -118,5 +116,3 @@ export default class ProductManager {
         }
     }
 }
-
-module.exports = ProductManager;
