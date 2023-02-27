@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/josemaria1988/rontil-backend#readme",
   "dependencies": {
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "lodash": "^4.17.21"
   }
 }

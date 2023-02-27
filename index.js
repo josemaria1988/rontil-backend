@@ -1,7 +1,8 @@
 import ProductManager from "./ProductManager.js";
 
 //Se creará una instancia de la clase “ProductManager”
-const manager = new ProductManager();
+const path = 'rontil-backend/files/products.json'
+const manager = new ProductManager(path);
 
 
 //Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
