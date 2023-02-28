@@ -80,7 +80,7 @@ const test5_update = async () => {
 //Se llamará al método “deleteProduct”, se evaluará que realmente se elimine el producto o que arroje un error en caso de no existir.
 const test6_delete = async () => {
   try {
-    const deletedProduct = await manager.deleteProduct(1);
+    const deletedProduct = await manager.deleteProduct(3);
     console.log(deletedProduct);
   } catch (error) {
     console.log(error);
