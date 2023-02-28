@@ -126,6 +126,6 @@ test2_add();
 test3_read();
 test4_findId();
 test5_update();
-/* test6_delete(); */
+test6_delete();
 test7_addMore();
 test8_addMore();

@@ -7,16 +7,6 @@ export default class ProductManager {
         this.productId = 0;
     }
 
-    loadProducts = async () => {
-        try {
-            const data = await fs.promises.readFile(this.path, 'utf-8');
-            this.products = JSON.parse(data);
-            this.productId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
-        } catch (error) {
-            console.error(`Error al leer el archivo ${this.path}: ${error}`);
-        }
-    }
-
     saveProducts = async () => {
         try {
             const data = JSON.stringify(this.products, null, 2);

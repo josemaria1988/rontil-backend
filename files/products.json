@@ -1,14 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "producto de prueba actualizado",
-    "description": "Este es un producto de prueba actualizado",
-    "price": 500,
-    "thumbnail": "Imagen actualizada",
-    "code": "def456",
-    "stock": 30
-  },
-  {
     "id": 2,
     "title": "nuevo producto",
     "description": "Este es un producto es más mejor",
