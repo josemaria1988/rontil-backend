@@ -4,7 +4,6 @@ export default class ProductManager {
     constructor(path) {
         this.path = path || './files/products.json';
         this.products = [];
-        this.productId = 0;
     }
 
     leer_archivo_json = async () => {
@@ -40,8 +39,11 @@ export default class ProductManager {
                 throw new Error(`El código ${product.code} ya existe`);
             }
 
+            const lastProductId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
+            const newProductId = lastProductId + 1;
+
             const newProduct = {
-                id: ++this.productId,
+                id: newProductId,
                 ...product,
             };
 

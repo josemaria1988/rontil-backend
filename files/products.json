@@ -1,20 +1,11 @@
 [
   {
-    "id": 2,
-    "title": "nuevo producto",
-    "description": "Este es un producto es más mejor",
-    "price": 10000,
-    "thumbnail": "Sin imagen",
-    "code": "abc321",
-    "stock": 55000
-  },
-  {
     "id": 1,
-    "title": "producto prueba",
-    "description": "Este es un producto prueba",
-    "price": 200,
-    "thumbnail": "Sin imagen",
-    "code": "abc123",
-    "stock": 25
+    "title": "producto de prueba actualizado",
+    "description": "Este es un producto de prueba actualizado",
+    "price": 500,
+    "thumbnail": "Imagen actualizada",
+    "code": "def456",
+    "stock": 30
   }
 ]

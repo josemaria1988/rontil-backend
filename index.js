@@ -94,7 +94,7 @@ const test7_addMore = async () => {
       description: "Este es un producto es más mejor",
       price: 10000,
       thumbnail: "Sin imagen",
-      code: "abc321",
+      code: "abc323",
       stock: 55000,
     };
     const newProduct = await manager.addProduct(product);
@@ -111,7 +111,24 @@ const test8_addMore = async () => {
       description: "Este es un producto es mucho más mejor",
       price: 15000,
       thumbnail: "Sin imagen",
-      code: "abc213",
+      code: "abc218",
+      stock: 105000,
+    };
+    const newProduct = await manager.addProduct(product);
+    console.log(newProduct);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const test9_addMore = async () => {
+  try {
+    const product = {
+      title: "otro nuevo producto",
+      description: "Este es un producto es mucho más mejorable",
+      price: 15000,
+      thumbnail: "Sin imagen",
+      code: "abc217",
       stock: 105000,
     };
     const newProduct = await manager.addProduct(product);
@@ -129,3 +146,4 @@ test5_update();
 test6_delete();
 test7_addMore();
 test8_addMore();
+test9_addMore();
