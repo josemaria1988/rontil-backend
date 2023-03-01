@@ -20,7 +20,7 @@ export default class ProductManager {
     saveProducts = async () => {
         try {
             const data = JSON.stringify(this.products, null, 2);
-            await this.leer_archivo_json();
+            await fs.promises.writeFile(this.path, data, "utf-8");
             console.log("Productos guardados");
         } catch (error) {
             console.error(`Error al guardar productos: ${error.message}`);
@@ -34,7 +34,7 @@ export default class ProductManager {
         }
 
         try {
-            this.leer_archivo_json();
+            await this.leer_archivo_json();
 
             if (this.products.some((p) => p.code === product.code)) {
                 throw new Error(`El código ${product.code} ya existe`);
@@ -60,7 +60,7 @@ export default class ProductManager {
 
     getProducts = async () => {
         try {
-            this.leer_archivo_json();
+            await this.leer_archivo_json();
             return this.products;
         } catch (error) {
             console.error(`Error al leer el archivo ${this.path}: ${error}`);
@@ -70,7 +70,7 @@ export default class ProductManager {
 
     getProductById = async (id) => {
         try {
-            this.leer_archivo_json();
+            await this.leer_archivo_json();
             const product = this.products.find((product) => product.id === id);
             if (product) {
                 return product;
@@ -86,7 +86,7 @@ export default class ProductManager {
 
     updateProduct = async (id, fieldsToUpdate) => {
         try {
-            this.leer_archivo_json();
+            await this.leer_archivo_json();
 
             const productIndex = this.products.findIndex((product) => product.id === id);
             if (productIndex === -1) {
@@ -107,7 +107,7 @@ export default class ProductManager {
     };
     deleteProduct = async (id) => {
         try {
-            this.leer_archivo_json();
+            await this.leer_archivo_json();
 
             const productIndex = this.products.findIndex((product) => product.id === id);
             if (productIndex === -1) {
