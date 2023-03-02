@@ -60,13 +60,17 @@ export default class ProductManager {
         }
     };
 
-    getProducts = async () => {
+    getProducts = async (limit) => {
         try {
             await this.leer_archivo_json();
-            return this.products;
+            let products = this.products;
+            if (limit) {
+                products = products.slice(0, limit);
+            }
+            return products;
         } catch (error) {
             console.error(`Error al leer el archivo ${this.path}: ${error}`);
-            return [];
+            return null;
         }
     }
 
