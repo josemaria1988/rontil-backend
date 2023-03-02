@@ -64,12 +64,12 @@ const test4_findId = async () => {
 const test5_update = async () => {
   try {
     const updatedProduct = await manager.updateProduct(1, {
-      title: "producto de prueba actualizado",
-      description: "Este es un producto de prueba actualizado",
-      price: 500, //Cambiamos el precio del producto!
-      thumbnail: "Imagen actualizada",
+      /* title: "producto de prueba actualizado dos veces",
+      description: "chacachacachaca probando", */
+      price: 15500, //Cambiamos el precio del producto!
+      /* thumbnail: "Imagen actualizada",
       code: "def456",
-      stock: 30,
+      stock: 30, */
     });
     console.log(updatedProduct);
   } catch (error) {
@@ -138,12 +138,58 @@ const test9_addMore = async () => {
   }
 };
 
-test1_read();
-test2_add();
-test3_read();
-test4_findId();
-test5_update();
-test6_delete();
-test7_addMore();
-test8_addMore();
-test9_addMore();
+const ejecutar = async () => {
+  try {
+    await test1_read()
+  }catch (error) {
+    return Promise.reject(error);
+};
+  try {
+    await test2_add()
+  }catch (error) {
+    return Promise.reject(error);
+  };
+  try {
+    await test3_read()
+  }catch (error) {
+    return Promise.reject(error);
+  }
+  try {
+    await test4_findId()
+  }catch (error) {
+    return Promise.reject(error);
+  }
+  try {
+    await test5_update();
+  }catch (error) {
+    return Promise.reject(error);
+  }
+  try {
+    await test6_delete();
+  }catch (error) {
+    return Promise.reject(error);
+  }
+  try {
+    await test7_addMore();
+  }catch (error) {
+    return Promise.reject(error);
+  }
+  try {
+    await test8_addMore();
+  }catch (error) {
+    return Promise.reject(error);
+  }
+  try {
+    await test9_addMore();
+  }catch (error) {
+    return Promise.reject(error);
+  }
+}
+
+ejecutar()
+
+
+
+
+
+
