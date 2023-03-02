@@ -1,8 +1,8 @@
-const http = require("http");
+import ProductManager from "./ProductManager.js";
 
-const server = http.createServer((request, response) => {
-    response.end("Mi primer hola mundo desde backend");
-})
+//Se creará una instancia de la clase “ProductManager”
+const path = './files/products.json'
+const manager = new ProductManager(path);
 
 
 //Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
