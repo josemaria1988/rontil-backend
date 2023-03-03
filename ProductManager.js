@@ -8,13 +8,13 @@ export default class ProductManager {
 
     leer_archivo_json = async () => {
         try {
-            const data = await fs.promises.readFile(this.path, 'utf-8');
-            this.products = JSON.parse(data);
-            return this.products;
+          const data = await fs.promises.readFile(this.path, 'utf-8');
+          this.products = JSON.parse(data);
+          return this.products;
         } catch (error) {
-            return Promise.reject(error);
+          return Promise.reject(error);
         }
-    }
+      }
 
     saveProducts = async () => {
         try {
