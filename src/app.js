@@ -1,10 +1,10 @@
 import express from "express";
-import ProductManager from 'ProductManager.js';
+import ProductManager from '../ProductManager.js';
 
 const app = express();
 const port = 8080;
 
-const manager = new ProductManager();
+const manager = new ProductManager('../files/products.json');
 
 app.get('/products', async (req, res) => {
   try {
