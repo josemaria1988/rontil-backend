@@ -2,7 +2,7 @@ import fs from "fs";
 
 export default class ProductManager {
     constructor(path) {
-        this.path = path || './files/products.json';
+        this.path = path || '../../files/products.json';
         this.products = [];
     }
 
@@ -28,9 +28,9 @@ export default class ProductManager {
     };
 
     addProduct = async (product) => {
-        if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
+       /*  if (!product.title || !product.description || !product.code || !product.price || !product.stock || !product.category) {
             throw new Error("Todos los campos son obligatorios");
-        }
+        } */
 
         try {
             await this.leer_archivo_json();
@@ -77,8 +77,9 @@ export default class ProductManager {
     getProductById = async (id) => {
         try {
             await this.leer_archivo_json();
-            const product = this.products.find((product) => product.id === id);
+            const product = this.products.find((product) => product.id === parseInt(id));
             if (product) {
+                console.log(product)
                 return product;
             } else {
                 console.error("Producto no encontrado");
