@@ -59,7 +59,7 @@ router.delete('/:pid', async (req, res) => {
     const deletedProduct = await manager.deleteProduct(pid);
     res.json(deletedProduct)
   } catch (error) {
-    res.jstatus(500).json({error: error.message})
+    res.status(500).json({error: error.message})
   }
 })
 
