@@ -82,26 +82,26 @@ export default class CartManager {
   
   addProductToCart = async (cartId, productId, quantity) => {
     try {
-      await this.leer_carts_json();
+      const existingCart = await this.getCartById(cartId);
+      if (existingCart) {
+        const productIndex = this.carts[existingCart.id].products.findIndex((product) => product.id === productId);
+        if (productIndex === -1) {
+          this.carts[existingCart.id].products.push({ id: productId, quantity: quantity });
+        } else {
+          this.carts[existingCart.id].products[productIndex].quantity += quantity;
+        }
 
-      const cartIndex = this.carts.findIndex((cart) => cart.id === cartId);
-      if (cartIndex === -1) {
+      } else {
         const newCartId = await this.createCart();
         this.carts.push({ id: newCartId, products: [{ id: productId, quantity: quantity }] });
-      } else {
-        const productIndex = this.carts[cartIndex].products.findIndex((product) => product.id === productId);
-        if (productIndex === -1) {
-          this.carts[cartIndex].products.push({ id: productId, quantity: quantity });
-        } else {
-          this.carts[cartIndex].products[productIndex].quantity += quantity;
-        }
+        
       }
 
       await this.saveCarts();
 
       console.log(`Producto agregado al carrito ${cartId} con éxito: ${productId}`);
 
-      return this.carts[cartIndex];
+      return this.carts[existingCart];
     } catch (error) {
       console.error(`Error al agregar el producto al carrito ${cartId}: ${error.message}`);
       throw error;
