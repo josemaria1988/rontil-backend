@@ -4,6 +4,7 @@ export default class CartManager {
   constructor(path) {
     this.path = path || '../files/cart.json';
     this.carts = [];
+    this.leer_carts_json();
   }
 
   leer_carts_json = async () => {
@@ -20,11 +21,11 @@ export default class CartManager {
       return null;
     }
   };
-  
+
   saveCarts = async () => {
     try {
       const data = JSON.stringify(this.carts, null, 2);
-      await fs.promises.writeFile(this.path, data, "utf-8");
+      await fs.promises.writeFile(this.path, data, 'utf-8');
       console.log('Carritos guardados');
     } catch (error) {
       console.error(`Error al guardar carritos: ${error.message}`);
@@ -32,31 +33,7 @@ export default class CartManager {
     }
   };
 
-  createCart = async () => {
-    try {
-      await this.leer_carts_json();
-
-      const lastCartId = this.carts.length > 0 ? this.carts[this.carts.length - 1].id : 0;
-      const newCartId = lastCartId + 1;
-
-      const newCart = {
-        id: newCartId,
-        products: [],
-      };
-
-      this.carts.push(newCart);
-
-      await this.saveCarts();
-
-      console.log(`Carrito creado con éxito: ${newCartId}`);
-
-      return newCartId;
-    } catch (error) {
-      console.error(`Error al crear un nuevo carrito: ${error.message}`);
-      throw error;
-    }
-  };
-
+  
   getCartById = async (cartId) => {
     try {
       await this.leer_carts_json();
@@ -74,10 +51,39 @@ export default class CartManager {
     }
   };
 
+  createCart = async () => {
+    try {
+      await this.leer_carts_json();
+      const lastCartId = this.carts.length > 0 ? this.carts[this.carts.length - 1].id : 0;
+      const newCartId = lastCartId + 1;
+
+      const existingCart = await this.getCartById(newCartId);
+      if (existingCart) {
+        return existingCart
+      } else {
+        const newCart = {
+          id: newCartId,
+          products: []
+        };
+  
+        this.carts.push(newCart);
+  
+        await this.saveCarts();
+      }
+
+      console.log(`Carrito creado con éxito: ${newCartId}`);
+
+      return newCartId;
+    } catch (error) {
+      console.error(`Error al crear un nuevo carrito: ${error.message}`);
+      throw error;
+    }
+  };
+  
   addProductToCart = async (cartId, productId, quantity) => {
     try {
       await this.leer_carts_json();
-  
+
       const cartIndex = this.carts.findIndex((cart) => cart.id === cartId);
       if (cartIndex === -1) {
         const newCartId = await this.createCart();
@@ -90,16 +96,15 @@ export default class CartManager {
           this.carts[cartIndex].products[productIndex].quantity += quantity;
         }
       }
-  
+
       await this.saveCarts();
-  
+
       console.log(`Producto agregado al carrito ${cartId} con éxito: ${productId}`);
-  
+
       return this.carts[cartIndex];
     } catch (error) {
       console.error(`Error al agregar el producto al carrito ${cartId}: ${error.message}`);
       throw error;
     }
   };
-
 }

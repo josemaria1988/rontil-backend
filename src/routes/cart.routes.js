@@ -8,16 +8,26 @@ const router = Router();
 // Crea un nuevo carrito
 router.post('/', async (req, res) => {
   try {
-    const newCartId = await manager.createCart();
-    const newCart = await manager.getCartById(newCartId);
-    console.log(newCart);
-    res.json(newCart);
+    const newCart = await manager.createCart();
+    res.json(newCart)
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Obtiene un carrito por id
+router.post('/:cid/product/:pid', async (req, res) => {
+  try {
+    const cid = req.params.cid;
+    const pid = req.params.pid;
+    const quantity = 1;
+    const newProduct = await manager.addProductToCart(cid, pid, quantity)
+    res.json(newProduct)
+  } catch (error) {
+    res.status(500).json({error: error.message})
+  }
+});
+
+// Obtener un carrito por id
 router.get('/:cid', async (req, res) => {
   try {
     const cart = await manager.getCartById(req.params.cid);
@@ -33,17 +43,7 @@ router.get('/:cid', async (req, res) => {
 
 // Agrega un producto a un carrito
 router.post('/:cid/product/:pid', async (req, res) => {
-  try {
-    const quantity = JSON.parse(req.body.quantity)
-    const cart = await manager.addProductToCart(req.params.cid, req.params.pid, quantity);
-    if (cart) {
-      res.json(cart);
-    } else {
-      res.status(404).json({ error: `No se encontró el carrito con id ${req.params.cid}` });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  
 });
 
 export default router;

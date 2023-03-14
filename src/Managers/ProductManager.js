@@ -92,10 +92,11 @@ export default class ProductManager {
     }
 
     updateProduct = async (id, fieldsToUpdate) => {
+        console.log(id)
         try {
             await this.leer_archivo_json();
 
-            const productIndex = this.products.findIndex((product) => product.id === id);
+            const productIndex = this.products.findIndex((product) => product.id == id);
             if (productIndex === -1) {
                 console.error("Producto no encontrado");
                 return;

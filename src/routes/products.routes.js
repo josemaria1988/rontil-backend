@@ -5,6 +5,7 @@ const manager = new ProductManager('../files/products.json');
 
 const router = Router();
 
+//Mostrar todos los productos
 router.get('/', async (req, res) => {
   const products = await manager.getProducts();
   if (!products) {
@@ -14,6 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+//mostrar producto por id
 router.get('/:pid', async (req, res) => {
   const pid = req.params.pid;
   const product = await manager.getProductById(pid);
@@ -24,6 +26,7 @@ router.get('/:pid', async (req, res) => {
   }
 });
 
+//crear un nuevo producto
 router.post('/', async (req, res) => {
   try {
     let newProduct = req.body
@@ -36,6 +39,7 @@ router.post('/', async (req, res) => {
   }
 })
 
+//modificar un producto
 router.put('/:pid', async (req, res) => {
   try {
     const pid = req.params.pid;
@@ -45,6 +49,17 @@ router.put('/:pid', async (req, res) => {
     res.json(updatedProduct)
   } catch(error) {
     res.status(500).json({error: error.message})
+  }
+});
+
+//borrar un producto
+router.delete('/:pid', async (req, res) => {
+  try {
+    const pid = req.params.pid;
+    const deletedProduct = await manager.deleteProduct(pid);
+    res.json(deletedProduct)
+  } catch (error) {
+    res.jstatus(500).json({error: error.message})
   }
 })
 
