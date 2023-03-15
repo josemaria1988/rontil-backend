@@ -84,11 +84,11 @@ export default class CartManager {
     try {
       const existingCart = await this.getCartById(cartId);
       if (existingCart) {
-        const productIndex = this.carts[existingCart.id].products.findIndex((product) => product.id === productId);
+        const productIndex = existingCart.products.findIndex((product) => product.id === productId);
         if (productIndex === -1) {
-          this.carts[existingCart.id].products.push({ id: productId, quantity: quantity });
+          existingCart.products.push({ id: productId, quantity: quantity });
         } else {
-          this.carts[existingCart.id].products[productIndex].quantity += quantity;
+          existingCart.products[productIndex].quantity += quantity;
         }
 
       } else {
