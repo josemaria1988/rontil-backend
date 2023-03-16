@@ -19,7 +19,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
   try {
     const cid = req.params.cid;
     const pid = req.params.pid;
-    const quantity = req.body.quantity;
+    const quantity = req.body.quantity || 1;
     const newProduct = await manager.addProductToCart(cid, pid, quantity)
     res.json(newProduct)
   } catch (error) {

@@ -124,33 +124,5 @@
       "http://localhost:8080/images/image8_1.jpg",
       "http://localhost:8080/images/image8_2.jpg"
     ]
-  },
-  {
-    "id": 10,
-    "title": "CHINGA TU PADRE",
-    "description": "100 g",
-    "code": "ASDF5456",
-    "price": 4,
-    "status": true,
-    "stock": 7,
-    "category": "personal care",
-    "thumbnails": [
-      "http://localhost:8080/images/image8_1.jpg",
-      "http://localhost:8080/images/image8_2.jpg"
-    ]
-  },
-  {
-    "id": 11,
-    "title": "Y CHINCA TU HERMANA",
-    "description": "100 g",
-    "code": "asdfgadf565654",
-    "price": 4,
-    "status": true,
-    "stock": 7,
-    "category": "personal care",
-    "thumbnails": [
-      "http://localhost:8080/images/image8_1.jpg",
-      "http://localhost:8080/images/image8_2.jpg"
-    ]
   }
 ]
