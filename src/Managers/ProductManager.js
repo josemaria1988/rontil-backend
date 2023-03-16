@@ -28,9 +28,9 @@ export default class ProductManager {
     };
 
     addProduct = async (product) => {
-       /*  if (!product.title || !product.description || !product.code || !product.price || !product.stock || !product.category) {
+        if (!product.title || !product.description || !product.code || !product.price || !product.stock || !product.category) {
             throw new Error("Todos los campos son obligatorios");
-        } */
+        }
 
         try {
             await this.leer_archivo_json();
@@ -102,8 +102,18 @@ export default class ProductManager {
                 return;
             }
 
-            const updatedProduct = { ...this.products[productIndex], ...fieldsToUpdate };
-            this.products[productIndex] = updatedProduct;
+            const allowedFields = ['title', 'description', 'code', 'price', 'stock', 'category'];
+            const fieldsToUpdateKeys = Object.keys(fieldsToUpdate);
+        
+            for (const field of fieldsToUpdateKeys) {
+              if (!allowedFields.includes(field)) {
+                throw new Error(`El campo ${field} no es permitido`);
+              } else {
+                  const updatedProduct = { ...this.products[productIndex], ...fieldsToUpdate };
+                  this.products[productIndex] = updatedProduct;
+              }
+            }
+
 
             await this.saveProducts();
 
@@ -117,7 +127,7 @@ export default class ProductManager {
         try {
             await this.leer_archivo_json();
 
-            const productIndex = this.products.findIndex((product) => product.id === id);
+            const productIndex = this.products.findIndex((product) => product.id == id);
             if (productIndex === -1) {
                 console.error("Producto no encontrado");
                 return;
