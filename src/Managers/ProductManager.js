@@ -1,8 +1,9 @@
 import fs from "fs";
+import __dirname from "../utils.js";
 
 export default class ProductManager {
     constructor(path) {
-        this.path = path || '../../files/products.json';
+        this.path = path || "../files/products.json";
         this.products = [];
     }
 
