@@ -18,7 +18,7 @@
   </form>
 </div>
 
-<h1>Productos en tiempo real</h1>
+<h1>Productos en websocket</h1>
 <ul id="lista-productos">
   {{#each products}}
     <li>{{this.title}} - {{this.description}} - {{this.price}}</li>
@@ -26,7 +26,7 @@
 </ul>
 
 <div>
-  <h1>Lista de productos</h1>
+  <h1>Lista de productos en HTTP</h1>
   <ul>
     {{#each products}}
     <li>
