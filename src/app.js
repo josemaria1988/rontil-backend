@@ -1,10 +1,11 @@
 import express from "express";
-import productsRouter from './routes/products.routes.js';
-import cartsRouter from './routes/cart.routes.js';
+import {Server} from 'socket.io';
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
-import {Server} from 'socket.io';
+import cartsRouter from './routes/cart.routes.js';
+import productsRouter from './routes/products.routes.js';
 import viewsRouter from './routes/views.routes.js';
+import ProductManager from './Managers/ProductManager.js';
 
 const app = express();
 const port = 8080;
@@ -19,6 +20,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use("/", viewsRouter);
 
+const manager = new ProductManager();
 
 
 const httpServer = app.listen(port, () => {
@@ -32,14 +34,12 @@ let logs = [];
 socketServer.on("connection", (socket) => {
   console.log("Nuevo cliente conectado");
 
-  socket.on("message1", (data) => {
-    console.log(data);
-  })
+  socket.on('nuevo_producto', async (data) => {
+    await manager.addProduct(data);
+    const allProducts = await manager.getProducts();
+    socket.emit('updateProducts', allProducts);
+  });
 
-  socket.on("message2", (data) => {
-    logs.push({socketId: socket.id, message: data});
-    socketServer.emit("log", {logs});
-  })
-
-  socketServer.emit('message2', 'Hola mundo desde socket backend!')
 })
+
+export {socketServer};

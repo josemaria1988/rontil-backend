@@ -1,41 +1,37 @@
-import ProductManager from "../Managers/ProductManager.js";
-
 const socket = io();
 
-const manager = new ProductManager();
+const formCrearProducto = document.getElementById('formCrearProducto');
 
-const crearProducto = async () => {
+formCrearProducto.addEventListener('submit', async (event) => {
+  event.preventDefault();
 
-    const stock = document.getElementById('stock').value;
+  const formData = new FormData(formCrearProducto);
 
-    const newProduct = {
-        title: document.getElementById('title').value,
-        description: document.getElementById('description').value,
-        code: document.getElementById('code').value,
-        price: document.getElementById('price').value,
-        stock: stock,
-        category: document.getElementById('category').value,
-        status: stock >= 1 ? true : false,
-        thumbnails: []
-    }
+  const newProduct = {
+    title: formData.get('title'),
+    description: formData.get('description'),
+    code: formData.get('code'),
+    price: formData.get('price'),
+    stock: formData.get('stock'),
+    category: formData.get('category'),
+    status: formData.get('stock') >= 1 ? true : false,
+    thumbnails: []
+  };
 
-    await manager.addProduct(newProduct);
+  console.log('Nuevo producto:', newProduct);
 
-    socket.emit('nuevo_producto', newProduct);
-}
-
-const btnCrearProducto = document.getElementById('btnCrearProducto');
-btnCrearProducto.addEventListener('click', (event) => {
-    event.preventDefault();
-    crearProducto();
+  socket.emit('nuevo_producto', newProduct);
 });
 
-socket.on('producto_creado', (producto) => {
-    console.log('Nuevo producto:', producto);
 
-    // Agregar el nuevo producto a la lista en la vista
+socket.on('updateProducts', (data) => {
+    const allProducts = data.products;
     const listaProductos = document.getElementById('lista-productos');
-    const nuevoProducto = document.createElement('li');
-    nuevoProducto.textContent = `${producto.titulo} - ${producto.descripcion} - ${producto.precio}`;
-    listaProductos.appendChild(nuevoProducto);
-});
+    listaProductos.innerHTML = '';
+  
+    allProducts.forEach((producto) => {
+      const nuevoProducto = document.createElement('li');
+      nuevoProducto.textContent = `${producto.title} - ${producto.description} - ${producto.price}`;
+      listaProductos.appendChild(nuevoProducto);
+    });
+  });
