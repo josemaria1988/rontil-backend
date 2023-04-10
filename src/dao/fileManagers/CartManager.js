@@ -1,8 +1,10 @@
 import fs from 'fs';
+import __dirname from "../../utils.js";
+import socket from "../../socket.js";
 
 export default class CartManager {
   constructor(path) {
-    this.path = path || '../files/cart.json';
+    this.path = `${__dirname}/files/cart.json`;
     this.carts = [];
     this.leer_carts_json();
   }
