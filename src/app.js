@@ -1,4 +1,6 @@
 import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 import socket from "./socket.js";
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
@@ -11,6 +13,13 @@ const port = 8080;
 
 app.use(express.json())
 app.use(express.static(`${__dirname}/public`))
+
+dotenv.config();
+const dbName = process.env.DB_NAME;
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+
+mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@jmscluster0.gtmsfjl.mongodb.net/${dbName}?retryWrites=true&w=majority`)
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);

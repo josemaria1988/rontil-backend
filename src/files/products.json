@@ -110,41 +110,5 @@
       "http://localhost:8080/images/image8_1.jpg",
       "http://localhost:8080/images/image8_2.jpg"
     ]
-  },
-  {
-    "id": 9,
-    "title": "CHINGA TU MADRE",
-    "description": "100 g",
-    "code": "ASDFFGH5156",
-    "price": 4,
-    "status": true,
-    "stock": 7,
-    "category": "personal care",
-    "thumbnails": [
-      "http://localhost:8080/images/image8_1.jpg",
-      "http://localhost:8080/images/image8_2.jpg"
-    ]
-  },
-  {
-    "id": 10,
-    "title": "Tomate",
-    "description": "Rico Tomate 2023",
-    "code": "tomates2023",
-    "price": "10000",
-    "stock": "10",
-    "category": "verduras",
-    "status": true,
-    "thumbnails": []
-  },
-  {
-    "id": 11,
-    "title": "Lechuga",
-    "description": "Rica Lechuga 2023",
-    "code": "lechuga2023",
-    "price": "1000",
-    "stock": "10",
-    "category": "verduras",
-    "status": true,
-    "thumbnails": []
   }
 ]

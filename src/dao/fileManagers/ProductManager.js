@@ -1,6 +1,6 @@
 import fs from "fs";
-import __dirname from "../utils.js";
-import socket from "../socket.js";
+import __dirname from "../../utils.js";
+import socket from "../../socket.js";
 
 export default class ProductManager {
     constructor() {
