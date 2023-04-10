@@ -1,9 +1,10 @@
 import fs from "fs";
 import __dirname from "../utils.js";
+import socket from "../socket.js";
 
 export default class ProductManager {
-    constructor(path) {
-        this.path = path || "../files/products.json";
+    constructor() {
+        this.path = `${__dirname}/files/products.json`;
         this.products = [];
     }
 
@@ -54,6 +55,7 @@ export default class ProductManager {
 
             console.log(`Producto agregado: ${newProduct.title}`);
 
+            socket.io.emit("product_added", product);
             return newProduct;
         } catch (error) {
             console.error(`Error al leer o actualizar el archivo ${this.path}: ${error.message}`);
@@ -135,10 +137,11 @@ export default class ProductManager {
             }
 
             this.products.splice(productIndex, 1);
-
             await this.saveProducts();
 
-            console.log(`Producto eliminado con éxito`);
+            socket.io.emit("product_deleted", productIndex);
+            return true;
+            
         } catch (error) {
             console.error(`Error al leer o actualizar el archivo ${this.path}: ${error.message}`);
             throw error;

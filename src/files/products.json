@@ -146,16 +146,5 @@
     "category": "verduras",
     "status": true,
     "thumbnails": []
-  },
-  {
-    "id": 12,
-    "title": "manzana",
-    "description": "manzana 2023",
-    "code": "manzanas2023",
-    "price": "15000",
-    "stock": "1",
-    "category": "frutas",
-    "status": true,
-    "thumbnails": []
   }
 ]

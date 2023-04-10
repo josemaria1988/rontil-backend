@@ -1,20 +1,17 @@
 import { Router } from "express";
-import ProductManager from "../Managers/ProductManager.js";
-import { socketServer } from "../app.js";
+import ProductManager from "../dao/ProductManager.js";
 
-const manager = new ProductManager();
 const router = Router();
+const productManager = new ProductManager();
+
+const products = await productManager.getProducts();
 
 router.get("/", async (req, res) => {
-    const products = await manager.getProducts();
-    res.render("home", { products });
-
+  res.render("home", { products, style: "styles.css", title: "Products" });
 });
 
-router.get("/realTimeProducts", async (req, res) => {
-    const products = await manager.getProducts();
-    socketServer.emit("products", products)
-    res.render("realTimeProducts", { products });
+router.get("/realtimeproducts", (req, res) => {
+  res.render("realTimeProducts", {products, style: "styles.css", title: "Real Time Products"});
 });
 
-export default router
+export default router;
