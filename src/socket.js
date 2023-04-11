@@ -5,17 +5,19 @@ const socket = {};
 socket.connect = (server) => {
     socket.io = new Server(server);
 
-    socket.io.on("connection", (socket) => {
+    socket.io.on("connection", (socketInstance) => {
         console.log(`${socket.id} connected`)
+
+        socketInstance.on("message", (data) => {
+            const messages = [];
+            messages.push(data);
+            socket.io.emit("messageLogs", messages);
+        });
+
+        socketInstance.on("user-autenticated", (data) => {
+            socketInstance.broadcast.emit("user-conected", data);
+        });
     });
-    socket.io.on("message", (data) => {
-        messages.push(data);
-        io.emit("messageLogs", messages);
-      });
-  
-      socket.io.on("user-autenticated", (data) => {
-        socket.broadcast.emit("user-connected", data);
-      });
 };
 
 export default socket;
