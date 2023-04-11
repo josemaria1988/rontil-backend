@@ -7,6 +7,7 @@ import __dirname from "./utils.js";
 import cartsRouter from './routes/cart.routes.js';
 import productsRouter from './routes/products.routes.js';
 import viewsRouter from './routes/views.routes.js';
+import chatRouter from './routes/chat.routes.js';
 
 const app = express();
 const port = 8080;
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/chat', chatRouter);
 app.use("/", viewsRouter);
 
 const httpServer = app.listen(port, () => {
