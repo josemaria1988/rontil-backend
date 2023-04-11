@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import ProductManager from '../dao/fileManagers/ProductManager.js';
+import productManager from '../dao/dbManagers/productManager.js';
 
-const manager = new ProductManager();
+const manager = new productManager();
 
 const router = Router();
 
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
   if (!products) {
     res.status(500).send('Error al obtener los productos');
   } else {
-    res.json(products);
+    return res.send({ status: "success", payload: products });
   }
 });
 
@@ -22,7 +23,7 @@ router.get('/:pid', async (req, res) => {
   if (!product) {
     res.status(404).send(`No se encontró el producto con id ${pid}`);
   } else {
-    res.json(product);
+    return res.send({ status: "success", payload: product });
   }
 });
 
@@ -32,7 +33,7 @@ router.post('/', async (req, res) => {
     let newProduct = req.body
     await manager.addProduct(newProduct)
     console.log(newProduct)
-    res.json(newProduct)
+    return res.send({ status: "success", payload: newProduct });
 
   } catch (error) {
     res.status(500).json({error: error.message})
@@ -46,7 +47,7 @@ router.put('/:pid', async (req, res) => {
     const fieldsToUpdate = req.body
     const updatedProduct = await manager.updateProduct(pid, fieldsToUpdate);
     console.log(updatedProduct);
-    res.json(updatedProduct)
+    return res.send({ status: "success", payload: updatedProduct });
   } catch(error) {
     res.status(500).json({error: error.message})
   }
@@ -57,7 +58,7 @@ router.delete('/:pid', async (req, res) => {
   try {
     const pid = req.params.pid;
     const deletedProduct = await manager.deleteProduct(pid);
-    res.json(deletedProduct)
+    return res.send({ status: "success", payload: "Producto eliminado" });
   } catch (error) {
     res.status(500).json({error: error.message})
   }
