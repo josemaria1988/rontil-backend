@@ -24,13 +24,36 @@ chatBox.addEventListener("keyup", (event) => {
   }
 });
 
-socket.on("messageLogs", (data) => {
+const updateMessages = (data) => {
   let log = document.getElementById("messageLogs");
   let messages = "";
   data.forEach((message) => {
-    messages += `${message.user}: ${message.message} </br>`;
+    messages += `${message.user}: ${message.message} </br>`
   });
   log.innerHTML = messages;
+}
+
+const addNewMessage = (message) => {
+  if (message && message.user && message.message) {
+    let log = document.getElementById("messageLogs");
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    messageDiv.innerHTML = `<strong>${message.user}:</strong> ${message.message}`;
+    log.appendChild(messageDiv);
+  } else {
+    console.error("Mensaje recibido con estructura incorrecta:", message);
+  }
+}
+
+socket.on("newMessage", (messageArray) => {
+  if (messageArray && messageArray.length > 0) {
+    addNewMessage(messageArray[0]);
+  } else {
+    console.error("Array de mensajes recibido vacío o inválido:", messageArray);
+  }
+});
+socket.on("messageLogs", (data) => {
+  updateMessages(data);
 });
 
 socket.on("user-connected", (data) => {
