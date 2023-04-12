@@ -1,16 +1,40 @@
-import { productModel } from "../models/products.model.js";
+import productModel from "../models/products.model.js";
 
 export default class ProductManager {
     constructor() { };
 
-    getProducts = async () => {
+    getProducts = async (options) => {
+        options = options || {};
+        const limit = options.limit || undefined;
+        const skip = options.skip || undefined;
+        const query = options.query || {};
+        const sort = options.sort || undefined;
+
+        const filters = {};
+
+        if (query.category) {
+            filters.category = query.category;
+        }
+
+        if (query.status) {
+            filters.status = query.status;
+        }
+
+        const sortOrder = {};
+
+        if (sort === 'price_asc') {
+            sortOrder.price = 1;
+        } else if (sort === 'price_desc') {
+            sortOrder.price = -1;
+        }
+
         try {
-            const products = await productModel.find();
+            const products = await productModel.paginate(filters, {limit, skip, query, sort: sortOrder});
             return products;
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
-    };
+    }
 
     getProductById = async (productId) => {
         try {
@@ -38,7 +62,7 @@ export default class ProductManager {
         return updatedProduct;
     }
 
-    deleteProducut = async (productId) => {
+    deleteProduct = async (productId) => {
         const deletedProduct = await productModel.findByIdAndDelete(productId);
         return deletedProduct;
     }

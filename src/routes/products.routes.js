@@ -8,13 +8,30 @@ const router = Router();
 
 //Mostrar todos los productos
 router.get('/', async (req, res) => {
-  const products = await manager.getProducts();
-  if (!products) {
-    res.status(500).send('Error al obtener los productos');
-  } else {
-    return res.send({ status: "success", payload: products });
+
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const query = req.query.query || "";
+  const sort = req.query.sort || "";
+
+  const options = {
+    limit,
+    skip: (page -1 ) * limit,
+    query,
+    sort
+  };
+
+  try {
+    const products = await manager.getProducts(options);
+    if(!products) {
+      res.status(500).send('Error al obtener los productos de la base de datos');
+    } else {
+      return res.send({status: "Success", payload: products});
+    }
+  } catch (error) {
+    res.status(500).send('Error al obtener los productos: ' + error.message);
   }
-});
+})
 
 //mostrar producto por id
 router.get('/:pid', async (req, res) => {
@@ -58,7 +75,7 @@ router.delete('/:pid', async (req, res) => {
   try {
     const pid = req.params.pid;
     const deletedProduct = await manager.deleteProduct(pid);
-    return res.send({ status: "success", payload: "Producto eliminado" });
+    return res.send({ status: "success", payload: deletedProduct });
   } catch (error) {
     res.status(500).json({error: error.message})
   }

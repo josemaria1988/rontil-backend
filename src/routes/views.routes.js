@@ -15,4 +15,12 @@ router.get("/realtimeproducts", async (req, res) => {
   res.render("realTimeProducts", {products, style: "styles.css", title: "Real Time Products"});
 });
 
+router.get("/register", (req, res) => {
+  res.render("register");
+});
+
+router.get("/login", (req, res) => {
+  res.render("login");
+});
+
 export default router;

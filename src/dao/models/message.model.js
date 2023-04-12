@@ -1,10 +1,16 @@
 import mongoose from "mongoose";
+import userModel from "./user.model.js";
 
 const messageSchema = new mongoose.Schema({
     user: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: userModel,
         required: true,
     },
+    name: {
+        type: String,
+        required: true,
+      },
     message: {
         type: String,
         required: true,
