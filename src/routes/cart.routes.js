@@ -1,12 +1,15 @@
 import { Router } from 'express';
-import CartManager from '../dao/fileManagers/CartManager.js';
+//import CartManager from '../dao/fileManagers/CartManager.js';
+import CartManager from '../dao/dbManagers/cartManager.js';
 
 const manager = new CartManager();
 
 const router = Router();
 
+
+
 // Crea un nuevo carrito
-router.post('/', async (req, res) => {
+/* router.post('/', async (req, res) => {
   try {
     const newCart = await manager.createCart();
     res.json(newCart)
@@ -25,10 +28,10 @@ router.post('/:cid/product/:pid', async (req, res) => {
   } catch (error) {
     res.status(500).json({error: error.message})
   }
-});
+}); */
 
 // Obtener un carrito por id
-router.get('/:cid', async (req, res) => {
+/* router.get('/:cid', async (req, res) => {
   try {
     const cart = await manager.getCartById(req.params.cid);
     if (cart) {
@@ -39,11 +42,11 @@ router.get('/:cid', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+}); */
 
 // Agrega un producto a un carrito
-router.post('/:cid/product/:pid', async (req, res) => {
+/* router.post('/:cid/product/:pid', async (req, res) => {
   
-});
+}); */
 
 export default router;
