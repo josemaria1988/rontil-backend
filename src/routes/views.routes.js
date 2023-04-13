@@ -8,26 +8,15 @@ const manager = new productManager();
 const cartManager = new CartManager();
 
 router.get("/", async (req, res) => {
-  const products = JSON.parse(JSON.stringify(await manager.getProducts()));
-  res.render("home", { products, style: "styles.css", title: "Products" });
+  const products = JSON.parse(JSON.stringify(await manager.getProducts(req)));
+  console.log(products)
+  res.render("home", { products: products.docs, style: "styles.css", title: "Products" });
 });
 
 router.get("/realtimeproducts", async (req, res) => {
-  const products = JSON.parse(JSON.stringify(await manager.getProducts()));
-  res.render("realTimeProducts", {products, style: "styles.css", title: "Real Time Products"});
-});
-
-router.get("/cart/:uid", async (req, res) => {
-  const userId = req.params.uid;
-  const cart = JSON.parse(JSON.stringify(await cartManager.getCartByUserId(userId)))
-})
-
-router.get("/register", (req, res) => {
-  res.render("register");
-});
-
-router.get("/login", (req, res) => {
-  res.render("login");
+  const products = JSON.parse(JSON.stringify(await manager.getProducts(req)));
+  console.log(products)
+  res.render("realTimeProducts", {products: products.docs, style: "styles.css", title: "Real Time Products"});
 });
 
 export default router;

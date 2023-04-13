@@ -5,7 +5,7 @@ export default class ProductManager {
 
     getProducts = async (options) => {
         options = options || {};
-        const limit = options.limit || undefined;
+        const limit = options.limit || 10;
         const skip = options.skip || undefined;
         const query = options.query || {};
         const sort = options.sort || undefined;
@@ -35,6 +35,22 @@ export default class ProductManager {
             console.log(error)
         }
     }
+
+    countProducts = async (query) => {
+        try {
+          const filter = {};
+      
+          if (query) {
+            filter.name = { $regex: query, $options: 'i' };
+          }
+      
+          const count = await productModel.countDocuments(filter);
+          return count;
+        } catch (error) {
+          console.log(error);
+          throw new Error('Error al contar los productos');
+        }
+      };
 
     getProductById = async (productId) => {
         try {

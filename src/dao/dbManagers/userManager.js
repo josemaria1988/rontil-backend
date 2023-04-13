@@ -1,16 +1,38 @@
-import mongoose from "mongoose";
-import userModel from "./user.model.js";
-import bcrypt from "bcrypt";
+import userModel from "../models/user.model.js";
 
-const registerUser = async (first_name, email, password) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const user = new userModel({
-            first_name: first_name,
-            email: email,
-            password: hashedPassword,
-        });
-    } catch (error) {
-        console.log(error)
+class UserManager {
+
+
+    getUserByEmail = async (email) => {
+        try {
+            const user = await userModel.findOne({ email: email });
+            return user;
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    }
+
+    createUser = async (first_name, email, password) => {
+        try {
+            const existingUser = await userModel.find({ email });
+            if (existingUser) {
+                throw new Error("El correo electrónico ya está en uso");
+            }
+
+            const newUser = new userModel({
+                first_name,
+                email,
+                password
+            });
+
+            const savedUser = await newUser.save();
+            return { status: "success", user: savedUser };
+        } catch (error) {
+            console.error(error);
+            return { status: "fail", message: "No se pudo crear el usuario en la base de datos" }
+        }
     }
 }
+
+export default UserManager;

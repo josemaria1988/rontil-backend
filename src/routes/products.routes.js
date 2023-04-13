@@ -8,7 +8,6 @@ const router = Router();
 
 //Mostrar todos los productos
 router.get('/', async (req, res) => {
-
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
   const query = req.query.query || "";
@@ -16,22 +15,31 @@ router.get('/', async (req, res) => {
 
   const options = {
     limit,
-    skip: (page -1 ) * limit,
+    skip: (page - 1) * limit,
     query,
     sort
   };
 
   try {
     const products = await manager.getProducts(options);
-    if(!products) {
+    const totalProducts = await manager.countProducts(query);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    if (!products) {
       res.status(500).send('Error al obtener los productos de la base de datos');
     } else {
-      return res.send({status: "Success", payload: products});
+      res.render('products', {
+        products: products.docs,
+        page,
+        totalPages,
+        prevPage: page > 1 ? page - 1 : null,
+        nextPage: page < totalPages ? page + 1 : null
+      });
     }
   } catch (error) {
     res.status(500).send('Error al obtener los productos: ' + error.message);
   }
-})
+});
 
 //mostrar producto por id
 router.get('/:pid', async (req, res) => {

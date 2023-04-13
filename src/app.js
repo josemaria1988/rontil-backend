@@ -8,6 +8,9 @@ import cartsRouter from './routes/cart.routes.js';
 import productsRouter from './routes/products.routes.js';
 import viewsRouter from './routes/views.routes.js';
 import chatRouter from './routes/chat.routes.js';
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import authRouter from "./routes/auth.routes.js";
 
 const app = express();
 const port = 8080;
@@ -27,10 +30,19 @@ app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+app.use(session ({
+  secret: "my_little_secret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {secure: false}
+}))
+
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/chat', chatRouter);
 app.use("/", viewsRouter);
+app.use("/api/auth", authRouter);
 
 const httpServer = app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
