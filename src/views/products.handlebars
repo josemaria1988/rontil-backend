@@ -1,9 +1,11 @@
 <div>
   {{#each products}}
     <div class="gallery" id="products">
+      <a href="/api/products/{{this._id}}">
       <h2>{{this.title}}</h2>
       <p>{{this.description}}</p>
       <p>{{this.price}}</p>
+      </a>
       <button class="add-to-cart" data-product-id="{{this._id}}" data-price="{{this.price}}">Agregar al carrito</button>
     </div>
   {{/each}}

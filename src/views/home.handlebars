@@ -1,8 +1,10 @@
 <div>
   {{#each products}}
+  <a href="/api/products/{{this._id}}">
     <div class="gallery" id="products">
       <h2>{{this.title}}</h2>
       <p>{{this.description}}</p>
     </div>
+  </a>
   {{/each}}
 </div>
