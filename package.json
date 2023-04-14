@@ -21,14 +21,13 @@
   },
   "homepage": "https://github.com/josemaria1988/rontil-backend#readme",
   "dependencies": {
-    "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "esm": "^3.2.25",
     "express": "^4.18.2",
     "express-handlebars": "^7.0.2",
     "express-session": "^1.17.3",
-    "lodash": "^4.17.21",
+    "handlebars": "^4.7.7",
     "mongoose": "^7.0.3",
     "mongoose-paginate-v2": "^1.7.1",
     "socket.io": "^4.6.1"

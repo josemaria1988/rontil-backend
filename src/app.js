@@ -2,7 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import socket from "./socket.js";
-import handlebars from "express-handlebars";
+import handlebars from "handlebars";
+import expressHandlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import cartsRouter from './routes/cart.routes.js';
 import productsRouter from './routes/products.routes.js';
@@ -25,7 +26,17 @@ const dbPassword = process.env.DB_PASSWORD;
 
 mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@jmscluster0.gtmsfjl.mongodb.net/${dbName}?retryWrites=true&w=majority`)
 
-app.engine("handlebars", handlebars.engine());
+const hbs = expressHandlebars.create({
+  handlebars: handlebars,
+  extname: 'handlebars',
+  defaultLayout: 'main',
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  }
+})
+
+app.engine("handlebars", hbs.engine);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
 app.use(express.urlencoded({ extended: true }));

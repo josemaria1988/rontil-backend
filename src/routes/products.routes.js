@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import ProductManager from '../dao/fileManagers/ProductManager.js';
-import productManager from '../dao/dbManagers/productManager.js';
+import ProductManager from '../dao/dbManagers/productManager.js';
 
-const manager = new productManager();
+const manager = new ProductManager();
 
 const router = Router();
 
@@ -21,7 +20,7 @@ router.get('/', async (req, res) => {
   };
 
   try {
-    const products = await manager.getProducts(options);
+    const products = JSON.parse(JSON.stringify(await manager.getProducts(options)));
     const totalProducts = await manager.countProducts(query);
     const totalPages = Math.ceil(totalProducts / limit);
 
@@ -33,7 +32,9 @@ router.get('/', async (req, res) => {
         page,
         totalPages,
         prevPage: page > 1 ? page - 1 : null,
-        nextPage: page < totalPages ? page + 1 : null
+        nextPage: page < totalPages ? page + 1 : null,
+        style: "styles.css",
+        title: "Products"
       });
     }
   } catch (error) {

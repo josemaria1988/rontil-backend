@@ -9,13 +9,11 @@ const cartManager = new CartManager();
 
 router.get("/", async (req, res) => {
   const products = JSON.parse(JSON.stringify(await manager.getProducts(req)));
-  console.log(products)
   res.render("home", { products: products.docs, style: "styles.css", title: "Products" });
 });
 
 router.get("/realtimeproducts", async (req, res) => {
   const products = JSON.parse(JSON.stringify(await manager.getProducts(req)));
-  console.log(products)
   res.render("realTimeProducts", {products: products.docs, style: "styles.css", title: "Real Time Products"});
 });
 

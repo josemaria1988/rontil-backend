@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import CartManager from '../dao/dbManagers/cartManager.js';
 import ProductManager from '../dao/dbManagers/productManager.js';
+import CartModel from '../dao/models/cart.model.js';
 
 const cartManager = new CartManager();
 const productManager = new ProductManager();
@@ -11,7 +12,7 @@ const router = Router();
 router.get('/:cid', async (req, res) => {
   try {
     const cart = await cartManager.getCart(req.params.cid);
-    const populatedCart = await cart.populate('products.product').execPopulate();
+    const populatedCart = await CartModel.populate(cart, { path: 'items.product' });
     res.json(populatedCart);
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
@@ -21,9 +22,10 @@ router.get('/:cid', async (req, res) => {
 //CREAR CARRITO ASOCIADO AL USUARIO
 router.post("/", async (req, res) => {
   try {
-      const { userId, productId, quantity } = req.body;
+      const { productId, quantity } = req.body;
+      const userId = "64375d16ace1edba156b083d"
 
-      // Obtén el producto por ID para asegurarte de que exista y obtener su precio
+      // Obtener el producto por ID para asegurar de que exista y obtener su precio
       const product = await productManager.getProductById(productId);
       if (!product) {
           res.status(404).json({ message: "Producto no encontrado" });
