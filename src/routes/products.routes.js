@@ -9,19 +9,25 @@ const router = Router();
 router.get('/', async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
-  const query = req.query.query || "";
+  const category = req.query.category || "";
+  const status = req.query.status;
   const sort = req.query.sort || "";
+
+  const filters = {
+    category,
+    status: status !== undefined && status !== '' ? status === 'true' : undefined,
+  };
 
   const options = {
     limit,
-    skip: (page - 1) * limit,
-    query,
+    page,
+    filters,
     sort
   };
 
   try {
-    const products = JSON.parse(JSON.stringify(await manager.getProducts(options)));
-    const totalProducts = await manager.countProducts(query);
+    const products = await manager.getProducts(options);
+    const totalProducts = await manager.countProducts(filters);
     const totalPages = Math.ceil(totalProducts / limit);
 
     if (!products) {

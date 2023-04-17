@@ -1,25 +1,37 @@
-
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="/css/{{style}}" />
-  </head>
-  <body>
 
-    <header>
-      <nav>
-        <ul>
-          <li><a href="/">Inicio</a></li>
-          <li><a href="/api/products">Productos</a></li>
-          <li><a href="/api/carts">Carrito</a></li>
-        </ul>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/css/{{style}}" />
+</head>
 
-    {{{body}}}
+<body>
 
-  </body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Inicio</a></li>
+        <li>
+          <a href="#">Productos</a>
+          <ul>
+            <li><a href="/api/products">Todos los productos</a></li>
+            <li><a href="/api/products?category=food">Comida</a></li>
+            <li><a href="/api/products?category=presonal-care">Personal Care</a></li>
+            <li><a href="/api/products?category=furniture">Muebles</a></li>
+            <li><a href="/api/products?status=available">Disponibles</a></li>
+            <li><a href="/api/products?status=notavailable">No disponibles</a></li>
+          </ul>
+        </li>
+        <li><a href="/api/carts/view/643825a783358ccfdbb10f05">Carrito</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  {{{body}}}
+
+</body>
+
 </html>

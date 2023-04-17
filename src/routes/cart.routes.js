@@ -11,14 +11,27 @@ const router = Router();
 //Obtener un carrito por ID de Usuario
 router.get('/:cid', async (req, res) => {
   try {
-    const cart = await cartManager.getCart(req.params.cid);
+    const cid = req.params.cid;
+    const cart = await cartManager.getCart(cid);
     const populatedCart = await CartModel.populate(cart, { path: 'items.product' });
-    res.json(populatedCart);
+    res.status(200).json(populatedCart);
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
   }
 });
 
+//mostrar carrito
+router.get('/view/:cid', async (req, res) => {
+  try {
+    const cid = req.params.cid
+    const cart = await cartManager.getCart(cid);
+    const populatedCart = await CartModel.populate(cart, { path: 'items.product' });
+    res.render("cart", {cart: populatedCart, cid: cid, style: "styles.css", title: "Cart"});
+  
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
 //CREAR CARRITO ASOCIADO AL USUARIO
 router.post("/", async (req, res) => {
   try {
@@ -76,18 +89,10 @@ router.put("/:cid/products/:pid", async (req, res) => {
 router.delete('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const updatedCart = await cartManager.removeProductFromCart(cid, pid);
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Producto eliminado o cantidad reducida en el carrito',
-      cart: updatedCart
-    });
+    const updatedCart = await cartManager.deleteProductFromCart(cid, pid);
+    res.json(updatedCart);
   } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: error.message
-    });
+    res.status(500).json({ status: 'error', message: error.message });
   }
 });
 
@@ -95,7 +100,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
 router.delete('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
-    const updatedCart = await cartManager.removeAllProductsFromCart(cid);
+    const updatedCart = await cartManager.clearCart(cid);
 
     res.status(200).json({
       status: 'success',

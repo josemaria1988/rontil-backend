@@ -1,0 +1,31 @@
+<div class="cart-container">
+  {{#if cart.items.length}}
+  <h1>CARRITO ID:</h1>
+  <p id="cartId">{{cid}}</p>
+    {{#each cart.items}}
+      <div class="cart-item">
+        <img src="{{this.product.image}}" alt="{{this.product.title}}">
+        <div class="cart-item-info">
+          <h3 class="cart-product-title">{{this.product.title}}</h3>
+          <p>{{this.product.description}}</p>
+          <p class="cart-product-price">Precio unitario: {{this.price}}€</p>
+          <div class="cart-product-quantity">
+            <label for="{{this.product._id}}">Cantidad:</label>
+            <input type="number" id="{{this.product._id}}" name="{{this.product._id}}" class="quantity-input" value="{{this.quantity}}" min="1" max="10">
+            <button class="update-quantity" data-product-id="{{this.product._id}}" data-cart-id="{{cid}}">Actualizar</button>
+          </div>
+          <button class="cart-product-remove" data-product-id="{{this.product._id}}">Eliminar producto</button>
+        </div>
+      </div>
+    {{/each}}
+    <div class="cart-product-total">
+      <p>Total a pagar: {{cart.totalPrice}}€</p>
+      <button id="clearCart" class="clear-cart">Vaciar carrito</button>
+      <button class="checkout">Comprar</button>
+    </div>
+  {{else}}
+    <p>No hay productos en el carrito</p>
+  {{/if}}
+</div>
+
+ <script src="/js/cart.js"></script>

@@ -6,42 +6,52 @@ export default class ProductManager {
     getProducts = async (options) => {
         options = options || {};
         const limit = options.limit || 10;
-        const skip = options.skip || undefined;
-        const query = options.query || {};
+        const page = options.page || 1;
+        const filters = options.filters || {};
         const sort = options.sort || undefined;
-
-        const filters = {};
-
-        if (query.category) {
-            filters.category = query.category;
+      
+        const query = {};
+      
+        if (filters.category) {
+          query.category = filters.category;
         }
-
-        if (query.status) {
-            filters.status = query.status;
+      
+        if (filters.status) {
+          query.status = filters.status === "available" ? true : false;
         }
-
+      
         const sortOrder = {};
-
+      
         if (sort === 'price_asc') {
-            sortOrder.price = 1;
+          sortOrder.price = 1;
         } else if (sort === 'price_desc') {
-            sortOrder.price = -1;
+          sortOrder.price = -1;
         }
-
+      
         try {
-            const products = await productModel.paginate(filters, {limit, skip, query, sort: sortOrder});
-            return products;
+          const products = await productModel.paginate(query, { page, limit, sort: sortOrder });
+          return products;
         } catch (error) {
-            console.log(error)
+          console.log(error);
         }
-    }
+      }
 
-    countProducts = async (query) => {
+      countProducts = async (query) => {
         try {
           const filter = {};
       
           if (query) {
-            filter.name = { $regex: query, $options: 'i' };
+            if (query.name) {
+              filter.name = { $regex: query.name, $options: 'i' };
+            }
+      
+            if (query.category) {
+              filter.category = query.category;
+            }
+      
+            if (query.status !== undefined) { // Comprueba si el status está definido
+              filter.status = query.status;
+            }
           }
       
           const count = await productModel.countDocuments(filter);
@@ -74,7 +84,7 @@ export default class ProductManager {
     }
 
     updateProduct = async (productId, productData) => {
-        const updatedProduct = await productModel.findByIdAndUpdate(productId, productData, {new: true});
+        const updatedProduct = await productModel.findByIdAndUpdate(productId, productData, { new: true });
         return updatedProduct;
     }
 
