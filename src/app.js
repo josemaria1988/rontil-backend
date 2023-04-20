@@ -12,6 +12,9 @@ import chatRouter from './routes/chat.routes.js';
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
+import passport from "passport";
+import initializePassport from "./auth/passport.js";
+
 
 const app = express();
 const port = 8080;
@@ -49,11 +52,15 @@ app.use(session ({
   cookie: {secure: false}
 }))
 
+initializePassport()
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/chat', chatRouter);
 app.use("/", viewsRouter);
-app.use("/api/auth", authRouter);
+app.use("/auth", authRouter);
 
 const httpServer = app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);

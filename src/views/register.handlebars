@@ -1,19 +1,34 @@
-<h1>Registrarse</h1>
-<form action="/api/auth/register" method="POST">
-  <div>
-    <label for="text">Nombre</label>
-    <input type="text" name="first_name" id="first_name" required>
-  </div>
-  <div>
-    <label for="email">Correo electrónico:</label>
-    <input type="email" name="email" id="email" required>
-  </div>
-  <div>
-    <label for="password">Contraseña:</label>
-    <input type="password" name="password" id="password" required>
-  </div>
-  <button type="submit">Iniciar sesión</button>
-</form>
-{{#if error}}
-<p class="error">{{error}}</p>
-{{/if}}
+
+<div>
+  <h1>Registro</h1>
+  <form id="registerForm">
+    <table>
+      <tr>
+        <td><label>Nombre</label></td>
+        <td><input name="first_name" /></td>
+      </tr>
+      <tr>
+        <td><label>Apellido</label></td>
+        <td><input name="last_name" /></td>
+      </tr>
+      <tr>
+        <td><label>Email</label></td>
+        <td><input name="email" /></td>
+      </tr>
+      <tr>
+        <td><label>Edad</label></td>
+        <td><input name="age" /></td>
+      </tr>
+      <tr>
+        <td><label>Contraseña</label></td>
+        <td><input type="password" name="password" /></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><input type="submit" /></td>
+      </tr>
+    </table>
+  </form>
+  <p>¿Ya tienes una cuenta? <a href="/login">Ingresa aquí</a></p>
+</div>
+<script src="/js/register.js"></script>
