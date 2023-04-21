@@ -9,4 +9,11 @@ export const createHash = (password) => bcrypt.hashSync(password, bcrypt.genSalt
 
 export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password);
 
+export const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect("/auth/login")
+  }
+
 export default __dirname;

@@ -8,7 +8,7 @@ form.addEventListener("submit", async (e) => {
 
   data.forEach((value, key) => (obj[key] = value));
 
-  let response = await fetch("/api/sessions/login", {
+  let response = await fetch("/auth/login", {
     method: "POST",
     body: JSON.stringify(obj),
     headers: {
@@ -18,4 +18,8 @@ form.addEventListener("submit", async (e) => {
 
   let result = await response.json();
   console.log(result);
+
+  if (result.status === "sucess") {
+    window.location.href = "/";
+  }
 });

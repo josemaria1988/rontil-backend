@@ -1,5 +1,4 @@
 const updateButtons = document.querySelectorAll('.update-quantity');
-const cid = document.getElementById('cartId').textContent;
 
 updateButtons.forEach(updateButton => {
     updateButton.addEventListener('click', async event => {
@@ -7,7 +6,7 @@ updateButtons.forEach(updateButton => {
         const input = event.target.parentElement.querySelector('.quantity-input');
         const newQuantity = input.value;
 
-        const response = await fetch(`/api/carts/${cid}/products/${productId}`, {
+        const response = await fetch(`/api/carts/cart/products/${productId}`, {
             method: "PUT",
             headers: {
                 'Content-type': 'application/json'
@@ -28,7 +27,7 @@ updateButtons.forEach(updateButton => {
 
 const clearCart = async () => {
     try {
-        const response = await fetch(`/api/carts/${cid}`, {
+        const response = await fetch(`/api/carts/cart`, {
             method: "DELETE",
             headers: {
                 'Content-type': 'application/json'
@@ -58,7 +57,7 @@ removeProductButtons.forEach(removeButton => {
   removeButton.addEventListener('click', async event => {
     const productId = event.target.dataset.productId;
 
-    const response = await fetch(`/api/carts/${cid}/products/${productId}`, {
+    const response = await fetch(`/api/carts/cart/products/${productId}`, {
       method: "DELETE",
       headers: {
         'Content-type': 'application/json'

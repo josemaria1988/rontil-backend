@@ -12,13 +12,9 @@
 
   <header>
     <nav>
-      <div>
-        <a href="/auth/perfil">usuario</a>
-      </div>
       <ul>
         <li><a href="/">Inicio</a></li>
-        <li>
-          <a href="#">Productos</a>
+        <li><a href="#">Productos</a>
           <ul>
             <li><a href="/api/products">Todos los productos</a></li>
             <li><a href="/api/products?category=food">Comida</a></li>
@@ -28,7 +24,13 @@
             <li><a href="/api/products?status=notavailable">No disponibles</a></li>
           </ul>
         </li>
-        <li><a href="/api/carts/view/643825a783358ccfdbb10f05">Carrito</a></li>
+        <li><a href="/api/carts/cart">Carrito</a></li>
+        {{#if user}}
+        <li><a href="/auth/perfil">Perfil</a></li>
+        <li><a href="/auth/logout">Salir</a></li>
+        {{else}}
+        <li><a href="/auth/login">Login</a></li>
+        {{/if}}
       </ul>
     </nav>
   </header>

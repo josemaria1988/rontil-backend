@@ -8,7 +8,7 @@ form.addEventListener("submit", async (e) => {
 
   data.forEach((value, key) => (obj[key] = value));
 
-  let response = await fetch("/api/sessions/register", {
+  let response = await fetch("/auth/register", {
     method: "POST",
     body: JSON.stringify(obj),
     headers: {

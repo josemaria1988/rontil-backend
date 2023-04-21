@@ -2,6 +2,7 @@ import { Router } from 'express';
 import CartManager from '../dao/dbManagers/cartManager.js';
 import ProductManager from '../dao/dbManagers/productManager.js';
 import CartModel from '../dao/models/cart.model.js';
+import {isAuthenticated} from "../utils.js";
 
 const cartManager = new CartManager();
 const productManager = new ProductManager();
@@ -9,7 +10,7 @@ const productManager = new ProductManager();
 const router = Router();
 
 //Obtener un carrito por ID de Usuario
-router.get('/:cid', async (req, res) => {
+router.get('/:cid', isAuthenticated, async (req, res) => {
   try {
     const cid = req.params.cid;
     const cart = await cartManager.getCart(cid);
@@ -20,23 +21,10 @@ router.get('/:cid', async (req, res) => {
   }
 });
 
-//mostrar carrito
-router.get('/view/:cid', async (req, res) => {
-  try {
-    const cid = req.params.cid
-    const cart = await cartManager.getCart(cid);
-    const populatedCart = await CartModel.populate(cart, { path: 'items.product' });
-    res.render("cart", {cart: populatedCart, cid: cid, style: "styles.css", title: "Cart"});
-  
-  } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
-  }
-});
 //CREAR CARRITO ASOCIADO AL USUARIO
-router.post("/", async (req, res) => {
+router.post("/", isAuthenticated, async (req, res) => {
   try {
       const { productId, quantity } = req.body;
-      const userId = "64375d16ace1edba156b083d"
 
       // Obtener el producto por ID para asegurar de que exista y obtener su precio
       const product = await productManager.getProductById(productId);
@@ -48,7 +36,7 @@ router.post("/", async (req, res) => {
       const price = product.price;
 
       // Llama a la función createCart con los datos requeridos
-      const newCart = await cartManager.createCart(userId, productId, price, quantity);
+      const newCart = await cartManager.createCart(req.user._id, productId, price, quantity);
 
       res.status(201).json(newCart);
   } catch (error) {
@@ -58,7 +46,7 @@ router.post("/", async (req, res) => {
 });
 
 //AGREGAR MÁS PRODUCTOS AL CARRITO
-router.put("/:cid", async (req, res) => {
+router.put("/:cid", isAuthenticated, async (req, res) => {
   try {
     const { cid } = req.params;
     const newProducts = req.body.items;
@@ -72,7 +60,7 @@ router.put("/:cid", async (req, res) => {
 });
 
 //ACTUALIZAR CANTIDAD EN EL CARRITO
-router.put("/:cid/products/:pid", async (req, res) => {
+router.put("/:cid/products/:pid", isAuthenticated, async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
@@ -86,7 +74,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
 });
 
 //ELIMINAR PRODUCTO DE UN CARRITO
-router.delete('/:cid/products/:pid', async (req, res) => {
+router.delete('/:cid/products/:pid', isAuthenticated, async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const updatedCart = await cartManager.deleteProductFromCart(cid, pid);
@@ -97,7 +85,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
 });
 
 //ELIMINAR CARRITO
-router.delete('/:cid', async (req, res) => {
+router.delete('/:cid', isAuthenticated, async (req, res) => {
   try {
     const { cid } = req.params;
     const updatedCart = await cartManager.clearCart(cid);

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import userModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
+import userModel from "../dao/models/user.model.js";
 import passport from "passport";
 
 const router = Router();
@@ -61,6 +61,12 @@ router.put("/restore", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+router.get('/logout', (req, res) => {
+  req.logout(() => {
+    res.redirect('/');
+  });
 });
 
 export default router;
