@@ -1,11 +1,17 @@
 
-
-const isAuthenticated = (req, res, next) => {
-    if (req.session && req.session.user) {
-        next();
-    } else {
-        res.status(401).send({status: "error", message: "No estás autorizado entrar acá"})
-    }
-};
-
-export default isAuthenticated;
+function checkLogin(req, res, next) {
+    if (!req.session.user) return res.redirect("/login");
+    next();
+  }
+  
+  function checkLogged(req, res, next) {
+    if (req.session.user) return res.redirect("/login");
+    next();
+  }
+  
+  function checkSession(req, res, next) {
+    if (req.session.user) return res.redirect("/");
+    next();
+  }
+  
+  export { checkLogged, checkLogin, checkSession };

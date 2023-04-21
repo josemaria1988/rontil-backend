@@ -1,6 +1,5 @@
 import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import morgan from "morgan";
 import socket from "./socket.js";
 import handlebars from "handlebars";
 import expressHandlebars from "express-handlebars";
@@ -11,23 +10,25 @@ import viewsRouter from './routes/views.routes.js';
 import chatRouter from './routes/chat.routes.js';
 import session from "express-session";
 import cookieParser from "cookie-parser";
-import authRouter from "./routes/auth.routes.js";
+import sessionsRouter from "./routes/sessions.routes.js";
 import passport from "passport";
 import initializePassport from "./auth/passport.js";
+import config from "./config.js";
+import MongoStore from "connect-mongo";
+import database from "./db.js";
 
-
+// Initialization Express
 const app = express();
 const port = 8080;
 
+//Database connection
+database.connect();
+
+//Middlewares
 app.use(express.json())
 app.use(express.static(`${__dirname}/public`))
-
-dotenv.config();
-const dbName = process.env.DB_NAME;
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-
-mongoose.connect(`mongodb+srv://${dbUser}:${dbPassword}@jmscluster0.gtmsfjl.mongodb.net/${dbName}?retryWrites=true&w=majority`)
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 const hbs = expressHandlebars.create({
   handlebars: handlebars,
@@ -39,18 +40,24 @@ const hbs = expressHandlebars.create({
   }
 })
 
+// Vistas de Handlebars
 app.engine("handlebars", hbs.engine);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
-app.use(express.urlencoded({ extended: true }));
 
+//User Sessions
 app.use(cookieParser());
-app.use(session ({
-  secret: "my_little_secret",
-  resave: false,
-  saveUninitialized: true,
-  cookie: {secure: false}
-}))
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: config.dbUrl,
+      ttl: 60,
+    }),
+    resave: true,
+    saveUninitialized: false,
+    secret: config.sessionSecret,
+  })
+);
 
 initializePassport()
 app.use(passport.initialize());
@@ -60,7 +67,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/chat', chatRouter);
 app.use("/", viewsRouter);
-app.use("/auth", authRouter);
+app.use("/auth", sessionsRouter);
 
 const httpServer = app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);

@@ -1,4 +1,4 @@
-const form = document.getElementById("registerForm");
+const form = document.getElementById("loginForm");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -8,7 +8,7 @@ form.addEventListener("submit", async (e) => {
 
   data.forEach((value, key) => (obj[key] = value));
 
-  let response = await fetch("/api/sessions/register", {
+  let response = await fetch("/api/sessions/login", {
     method: "POST",
     body: JSON.stringify(obj),
     headers: {
