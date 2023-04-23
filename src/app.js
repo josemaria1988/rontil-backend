@@ -51,11 +51,17 @@ app.use(
   session({
     store: MongoStore.create({
       mongoUrl: config.dbUrl,
-      ttl: 60,
+      autoRemove: 'native', // Dejar que el controlador de sesión configure automáticamente la eliminación de sesiones
+      touchAfter: 24 * 60 * 60, // Tiempo en segundos que una sesión puede ser utilizada sin ser actualizada en la base de datos (1 día en este ejemplo)
     }),
-    resave: true,
+    resave: false, // No guardar la sesión si no ha sido modificada
     saveUninitialized: false,
     secret: config.sessionSecret,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // Duración de la sesión en milisegundos, aquí se establece en 30 días
+      secure: false, // Establecer en true si estás utilizando HTTPS
+      httpOnly: true, // Evita que las cookies sean accesibles desde el lado del cliente (recomendado)
+    },
   })
 );
 

@@ -2,7 +2,7 @@ import { Router } from "express";
 import productManager from '../dao/dbManagers/productManager.js';
 import CartManager from "../dao/dbManagers/cartManager.js";
 import cartModel from "../dao/models/cart.model.js";
-import {isAuthenticated} from "../utils.js";
+import { isAuthenticated } from "../utils.js";
 
 
 
@@ -23,25 +23,15 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/auth/perfil", isAuthenticated, async (req, res) => {
-  res.render("perfil", {user: req.user, style: "styles.css", title: "Perfil"});
+  res.render("perfil", { user: req.user, style: "styles.css", title: "Perfil" });
 });
 
 router.get("/auth/register", async (req, res) => {
-  res.render("register", {style: "styles.css", title: "Register"})
+  res.render("register", { style: "styles.css", title: "Register" })
 });
 
 router.get("/auth/login", async (req, res) => {
-  res.render("login", {style: "styles.css", title: "Login"})
-});
-
-router.get('/api/carts/cart', isAuthenticated, async (req, res) => {
-  try {
-      const cart = await cartModel.findOne({ user: req.user._id }).populate('items.product');
-      res.render("cart", { cart: cart, cid: cart._id, style: "styles.css", title: "Cart" });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error al obtener el carrito del usuario" });
-  }
+  res.render("login", { style: "styles.css", title: "Login" })
 });
 
 export default router;

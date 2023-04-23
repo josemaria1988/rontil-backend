@@ -1,15 +1,28 @@
 import { Router } from "express";
 import { createHash, isValidPassword } from "../utils.js";
 import userModel from "../dao/models/user.model.js";
+import CartManager from "../dao/dbManagers/cartManager.js"
 import passport from "passport";
 
 const router = Router();
+const cartManager = new CartManager();
 
 router.post(
   "/register",
   passport.authenticate("register", { failureRedirect: "/failRegister" }),
+  async (req, res, next) => {
+    try {
+      // Crear carrito vacío para el usuario
+      await cartManager.createEmptyCart(req.user._id);
+
+      // Continuar al siguiente middleware o enviar respuesta
+      next();
+    } catch (error) {
+      res.status(500).send({ status: "error", message: error.message });
+    }
+  },
   async (req, res) => {
-    return res.send({ status: "sucess", message: "user registered" });
+    return res.send({ status: "success", message: "user registered" });
   }
 );
 
@@ -26,12 +39,13 @@ router.post(
       return res.status(401).send({ status: "error", error: "Unauthorized" });
 
     req.session.user = {
+      _id: req.user._id,
       first_name: req.user.first_name,
       last_name: req.user.last_name,
       age: req.user.age,
       email: req.user.email,
     };
-    res.send({ status: "sucess", payload: req.user });
+    res.send({ status: "success", payload: req.user });
   }
 );
 

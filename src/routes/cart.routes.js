@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import CartManager from '../dao/dbManagers/cartManager.js';
 import ProductManager from '../dao/dbManagers/productManager.js';
-import CartModel from '../dao/models/cart.model.js';
 import {isAuthenticated} from "../utils.js";
 
 const cartManager = new CartManager();
@@ -9,15 +8,18 @@ const productManager = new ProductManager();
 
 const router = Router();
 
-//Obtener un carrito por ID de Usuario
-router.get('/:cid', isAuthenticated, async (req, res) => {
+//OBTENER CARRITO POR ID DE USUARIO EN SESION.
+router.get('/cart', isAuthenticated, async (req, res) => {
+  console.log("Inicio del controlador del carrito");
   try {
-    const cid = req.params.cid;
-    const cart = await cartManager.getCart(cid);
-    const populatedCart = await CartModel.populate(cart, { path: 'items.product' });
-    res.status(200).json(populatedCart);
+    const uid = req.session.user._id;
+    console.log('User ID:', uid);
+    const cart = await cartManager.getCart(uid)
+    console.log(cart._id)
+    res.render("cart", { cart: cart, cid: cart._id, user: req.session.user, style: "styles.css", title: "Cart" });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener el carrito del usuario" });
   }
 });
 

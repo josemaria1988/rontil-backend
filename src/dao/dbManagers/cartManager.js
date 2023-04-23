@@ -4,12 +4,14 @@ class CartManager {
   constructor() { };
 
   //OBTENER CARRITO
-  getCart = async (cid) => {
+  getCart = async (uid) => {
     try {
-      const cart = await cartModel.findById(cid);
+      console.log('Buscando carrito para el usuario:', uid);
+      const cart = await cartModel.findOne({user: uid});
       if (!cart) {
         throw new Error("Carrito no encontrado");
       }
+      console.log("Carrito encontrado:", cart);
       return cart;
     } catch (error) {
       console.log(error);
@@ -31,6 +33,23 @@ class CartManager {
         totalPrice: price * quantity
       });
 
+      const savedCart = await newCart.save();
+      return savedCart;
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error al crear el carrito");
+    }
+  };
+
+  //CREAR CARRITO VACÍO
+  createEmptyCart = async (uid) => {
+    try {
+      const newCart = new cartModel({
+        user: uid,
+        items: [],
+        totalPrice: 0
+      });
+  
       const savedCart = await newCart.save();
       return savedCart;
     } catch (error) {
