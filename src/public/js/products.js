@@ -5,12 +5,11 @@ const addToCart = async (event) => {
     console.log("addToCart function called")
     const targetButton = event.target;
     const productId = targetButton.dataset.productId;
-    const productPrice = parseFloat(targetButton.dataset.price);
     const uid = targetButton.dataset.uid;
 
     try {
         // Obtener el carrito del usuario
-        const cartResponse = await fetch(`http://localhost:8080/api/carts/cart/:${uid}`);
+        const cartResponse = await fetch(`http://localhost:8080/api/carts/cart/${uid}`);
         const cart = await cartResponse.json();
 
         // Verificar si la respuesta contiene errores
@@ -24,7 +23,7 @@ const addToCart = async (event) => {
         if (existingItemIndex !== -1) {
             // Si el producto ya está en el carrito, actualizar la cantidad
             const newQuantity = cart.items[existingItemIndex].quantity + 1;
-            const updateResponse = await fetch(`http://localhost:8080/api/carts/${cid}/products/${productId}`, {
+            const updateResponse = await fetch(`http://localhost:8080/api/carts/cart/${uid}/products/${productId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ quantity: newQuantity })
@@ -38,21 +37,20 @@ const addToCart = async (event) => {
         } else {
             // Si el producto no está en el carrito, agregarlo
             const newProduct = {
-                product: productId,
-                quantity: 1,
-                price: productPrice
+                productId: productId,
+                quantity: 1
             };
-
-            const addResponse = await fetch(`http://localhost:8080/api/carts/${cid}`, {
-                method: 'PUT',
+            
+            const addResponse = await fetch(`http://localhost:8080/api/carts`, {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: [newProduct] })
+                body: JSON.stringify(newProduct)
             });
-
+            
             if (!addResponse.ok) {
                 throw new Error('No se pudo agregar al carrito');
             }
-
+            
             alert('Producto agregado al carrito');
         }
     } catch (error) {

@@ -59,9 +59,9 @@ class CartManager {
   };
 
   //ACTUALIZAR CARRITO CON NUEVO PRODUCTO
-  updateCartWithProducts = async (cartId, newProducts) => {
+  updateCartWithProducts = async (uid, newProducts) => {
     try {
-      const cart = await cartModel.findById(cartId);
+      const cart = await cartModel.findOne({user: uid});
       if (!cart) {
         throw new Error("Carrito no encontrado");
       }
@@ -80,7 +80,7 @@ class CartManager {
   // ACTUALIZAR CANTIDAD DE UN PRODUCTO EN EL CARRITO
   updateProductQuantity = async (cid, pid, newQuantity) => {
     try {
-      const cart = await cartModel.findOne({ _id: cid });
+      const cart = await cartModel.findById(cid );
       if (!cart) {
         throw new Error('Carrito no encontrado');
       }

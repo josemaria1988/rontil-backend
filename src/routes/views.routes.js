@@ -34,4 +34,17 @@ router.get("/auth/login", async (req, res) => {
   res.render("login", { style: "styles.css", title: "Login" })
 });
 
+//Mostrar carrito por ID de usuario en sesion.
+router.get('/cart', isAuthenticated, async (req, res) => {
+  console.log("Inicio del controlador del carrito");
+  try {
+    const uid = req.user._id;
+    const cart = await cartManager.getCart(uid)
+    res.render("cart", { cart: cart, cid: cart._id, user: req.user, style: "styles.css", title: "Cart" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener el carrito del usuario" });
+  }
+});
+
 export default router;

@@ -9,12 +9,11 @@ const productManager = new ProductManager();
 const router = Router();
 
 //OBTENER CARRITO POR ID DE USUARIO EN SESION.
-router.get('/cart', isAuthenticated, async (req, res) => {
-  console.log("Inicio del controlador del carrito");
+router.get('/cart/:uid', isAuthenticated, async (req, res) => {
   try {
-    const uid = req.user._id;
-    const cart = await cartManager.getCart(uid)
-    res.render("cart", { cart: cart, cid: cart._id, user: req.user, style: "styles.css", title: "Cart" });
+    const uid = req.params.uid;
+    const cart = await cartManager.getCart(uid);
+    res.status(200).json(cart);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener el carrito del usuario" });
@@ -61,12 +60,12 @@ router.put("/cart/:uid", isAuthenticated, async (req, res) => {
 });
 
 //ACTUALIZAR CANTIDAD EN EL CARRITO
-router.put("/:cid/products/:pid", isAuthenticated, async (req, res) => {
+router.put("/:uid/products/:pid", isAuthenticated, async (req, res) => {
   try {
-    const { cid, pid } = req.params;
+    const { uid, pid } = req.params;
     const { quantity } = req.body;
 
-    const updatedCart = await cartManager.updateProductQuantity(cid, pid, quantity);
+    const updatedCart = await cartManager.updateProductQuantity(uid, pid, quantity);
     res.status(200).json(updatedCart);
   } catch (error) {
     console.error(error);
