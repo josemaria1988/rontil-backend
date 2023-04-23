@@ -14,13 +14,17 @@ export const isValidPassword = (user, password) => bcrypt.compareSync(password, 
 
 export const isAuthenticated = async (req, res, next) => {
   if (req.isAuthenticated()) {
-    const userId = req.session.user._id;
-    const cart = await cartManager.getCart(userId);
+    const userId = req.user._id;
 
-    if (cart) {
-      req.session.cart = cart;
-    } else {
-      console.error("Error al obtener el carrito del usuario");
+    try {
+      const cart = await cartManager.getCart(userId);
+      if (cart) {
+        req.user.cart = cart;
+      } else {
+        console.error("Error al obtener el carrito del usuario");
+      }
+    } catch (error) {
+      console.error("Error al obtener el carrito del usuario:", error.message);
     }
 
     return next();

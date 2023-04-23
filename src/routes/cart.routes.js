@@ -12,11 +12,9 @@ const router = Router();
 router.get('/cart', isAuthenticated, async (req, res) => {
   console.log("Inicio del controlador del carrito");
   try {
-    const uid = req.session.user._id;
-    console.log('User ID:', uid);
+    const uid = req.user._id;
     const cart = await cartManager.getCart(uid)
-    console.log(cart._id)
-    res.render("cart", { cart: cart, cid: cart._id, user: req.session.user, style: "styles.css", title: "Cart" });
+    res.render("cart", { cart: cart, cid: cart._id, user: req.user, style: "styles.css", title: "Cart" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener el carrito del usuario" });
@@ -50,10 +48,10 @@ router.post("/", isAuthenticated, async (req, res) => {
 //AGREGAR MÁS PRODUCTOS AL CARRITO
 router.put("/:cid", isAuthenticated, async (req, res) => {
   try {
-    const { cid } = req.params;
+    const cart = await cartManager.getCart(req.user._id);
     const newProducts = req.body.items;
 
-    const updatedCart = await cartManager.updateCartWithProducts(cid, newProducts);
+    const updatedCart = await cartManager.updateCartWithProducts(cart._id, newProducts);
     res.status(200).json(updatedCart);
   } catch (error) {
     console.error(error);

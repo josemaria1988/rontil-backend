@@ -40,7 +40,8 @@ router.get('/', async (req, res) => {
         prevPage: page > 1 ? page - 1 : null,
         nextPage: page < totalPages ? page + 1 : null,
         style: "styles.css",
-        title: "Products"
+        title: "Products",
+        user: req.user, 
       });
     }
   } catch (error) {
