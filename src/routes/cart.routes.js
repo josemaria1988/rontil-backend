@@ -9,9 +9,9 @@ const productManager = new ProductManager();
 const router = Router();
 
 //OBTENER CARRITO POR ID DE USUARIO EN SESION.
-router.get('/cart/:uid', isAuthenticated, async (req, res) => {
+router.get('/cart', isAuthenticated, async (req, res) => {
   try {
-    const uid = req.params.uid;
+    const uid = req.user._id;
     const cart = await cartManager.getCart(uid);
     res.status(200).json(cart);
   } catch (error) {
@@ -44,18 +44,17 @@ router.post("/", isAuthenticated, async (req, res) => {
   }
 });
 
-//AGREGAR MÁS PRODUCTOS AL CARRITO
-router.put("/cart/:uid", isAuthenticated, async (req, res) => {
-  try {
-    const uid = req.params.uid
-    const cart = await cartManager.getCart(uid);
-    const newProducts = req.body.items;
+// Agregar un producto al carrito
+router.put("/cart", isAuthenticated, async (req, res) => {
+  const uid = req.user._id;
+  const newProducts = req.body.items;
 
-    const updatedCart = await cartManager.updateCartWithProducts(cart._id, newProducts);
-    res.status(200).json(updatedCart);
+  try {
+    const updatedCart = await cartManager.updateCartWithProducts(uid, newProducts);
+    res.json(updatedCart);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error al actualizar el carrito" });
+    console.error("Error al agregar el producto al carrito:", error.message);
+    res.status(500).json({ status: "error", message: error.message });
   }
 });
 
