@@ -46,9 +46,10 @@ router.post("/", isAuthenticated, async (req, res) => {
 });
 
 //AGREGAR MÁS PRODUCTOS AL CARRITO
-router.put("/:cid", isAuthenticated, async (req, res) => {
+router.put("/cart/:uid", isAuthenticated, async (req, res) => {
   try {
-    const cart = await cartManager.getCart(req.user._id);
+    const uid = req.params.uid
+    const cart = await cartManager.getCart(uid);
     const newProducts = req.body.items;
 
     const updatedCart = await cartManager.updateCartWithProducts(cart._id, newProducts);

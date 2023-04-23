@@ -6,12 +6,11 @@ const addToCart = async (event) => {
     const targetButton = event.target;
     const productId = targetButton.dataset.productId;
     const productPrice = parseFloat(targetButton.dataset.price);
-    //const uid = "64375d16ace1edba156b083d";
-    const cid = "643825a783358ccfdbb10f05"
+    const uid = targetButton.dataset.uid;
 
     try {
         // Obtener el carrito del usuario
-        const cartResponse = await fetch(`http://localhost:8080/api/carts/${cid}`);
+        const cartResponse = await fetch(`http://localhost:8080/api/carts/cart/:${uid}`);
         const cart = await cartResponse.json();
 
         // Verificar si la respuesta contiene errores
