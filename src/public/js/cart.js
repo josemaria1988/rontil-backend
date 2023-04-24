@@ -26,24 +26,24 @@ updateButtons.forEach(updateButton => {
 
 
 const clearCart = async () => {
-    try {
-        const response = await fetch(`/api/carts/cart`, {
-            method: "DELETE",
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: ""
-        });
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    const response = await fetch(`/api/carts/cart`, {
+      method: "DELETE",
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: ""
+    });
 
     if (response.ok) {
-        console.log('Carrito vaciado con éxito');
-        location.reload();
-      } else {
-        console.error('Error al vaciar el carrito');
-      }
+      console.log('Carrito vaciado con éxito');
+      location.reload();
+    } else {
+      console.error('Error al vaciar el carrito');
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const vaciarCarrito = document.getElementById('clearCart');

@@ -16,6 +16,7 @@ import initializePassport from "./auth/passport.js";
 import config from "./config.js";
 import MongoStore from "connect-mongo";
 import database from "./db.js";
+import createAdminUser from "./init.js";
 
 // Initialization Express
 const app = express();
@@ -44,6 +45,9 @@ const hbs = expressHandlebars.create({
 app.engine("handlebars", hbs.engine);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
+handlebars.registerHelper("eq", (val1, val2) => {
+  return val1 === val2;
+});
 
 //User Sessions
 app.use(cookieParser());
@@ -80,3 +84,5 @@ const httpServer = app.listen(port, () => {
 });
 
 socket.connect(httpServer);
+
+createAdminUser();

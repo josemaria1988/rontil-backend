@@ -1,0 +1,17 @@
+{{#each carts}}
+  <h3>Carrito ID: {{_id}}</h3>
+  <table>
+    <tr>
+      <th>Nombre del producto</th>
+      <th>Precio</th>
+      <th>Cantidad</th>
+    </tr>
+    {{#each items}}
+      <tr>
+        <td>{{product.title}}</td>
+        <td>{{product.price}}</td>
+        <td>{{quantity}}</td>
+      </tr>
+    {{/each}}
+  </table>
+{{/each}}

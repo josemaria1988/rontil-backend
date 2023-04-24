@@ -33,4 +33,12 @@ export const isAuthenticated = async (req, res, next) => {
   res.redirect("/auth/login");
 };
 
+export const isAdmin = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Acceso denegado. No eres un administrador." });
+  }
+};
+
 export default __dirname;

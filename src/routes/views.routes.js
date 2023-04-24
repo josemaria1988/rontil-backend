@@ -2,7 +2,7 @@ import { Router } from "express";
 import productManager from '../dao/dbManagers/productManager.js';
 import CartManager from "../dao/dbManagers/cartManager.js";
 import cartModel from "../dao/models/cart.model.js";
-import { isAuthenticated } from "../utils.js";
+import { isAuthenticated, isAdmin } from "../utils.js";
 
 
 
@@ -44,6 +44,17 @@ router.get('/cart', isAuthenticated, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener el carrito del usuario" });
+  }
+});
+
+// Renderizar todos los carritos (solo para administradores)
+router.get('/all-carts', isAuthenticated, isAdmin, async (req, res) => {
+  try {
+    const carts = await cartManager.getAllCarts();
+    res.render('allCarts', { carts, user: req.user, style: "styles.css", title: "Ordenes-Carritos" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al obtener todos los carritos");
   }
 });
 

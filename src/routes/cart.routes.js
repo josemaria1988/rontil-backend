@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import CartManager from '../dao/dbManagers/cartManager.js';
 import ProductManager from '../dao/dbManagers/productManager.js';
-import {isAuthenticated} from "../utils.js";
+import {isAuthenticated, isAdmin} from "../utils.js";
 
 const cartManager = new CartManager();
 const productManager = new ProductManager();
@@ -59,9 +59,10 @@ router.put("/cart", isAuthenticated, async (req, res) => {
 });
 
 //ACTUALIZAR CANTIDAD EN EL CARRITO
-router.put("/:uid/products/:pid", isAuthenticated, async (req, res) => {
+router.put("/cart/products/:pid", isAuthenticated, async (req, res) => {
   try {
-    const { uid, pid } = req.params;
+    const uid = req.user._id;
+    const pid = req.params.pid;
     const { quantity } = req.body;
 
     const updatedCart = await cartManager.updateProductQuantity(uid, pid, quantity);
@@ -73,10 +74,11 @@ router.put("/:uid/products/:pid", isAuthenticated, async (req, res) => {
 });
 
 //ELIMINAR PRODUCTO DE UN CARRITO
-router.delete('/:cid/products/:pid', isAuthenticated, async (req, res) => {
+router.delete('/cart/products/:pid', isAuthenticated, async (req, res) => {
   try {
-    const { cid, pid } = req.params;
-    const updatedCart = await cartManager.deleteProductFromCart(cid, pid);
+    const uid = req.user._id;
+    const pid = req.params.pid;
+    const updatedCart = await cartManager.deleteProductFromCart(uid, pid);
     res.json(updatedCart);
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
@@ -84,10 +86,10 @@ router.delete('/:cid/products/:pid', isAuthenticated, async (req, res) => {
 });
 
 //ELIMINAR CARRITO
-router.delete('/:cid', isAuthenticated, async (req, res) => {
+router.delete('/cart', isAuthenticated, async (req, res) => {
   try {
-    const { cid } = req.params;
-    const updatedCart = await cartManager.clearCart(cid);
+    const uid = req.user._id;
+    const updatedCart = await cartManager.clearCart(uid);
 
     res.status(200).json({
       status: 'success',
@@ -99,6 +101,17 @@ router.delete('/:cid', isAuthenticated, async (req, res) => {
       status: 'error',
       message: error.message
     });
+  }
+});
+
+// Obtener todos los carritos (solo para administradores)
+router.get('/all', isAuthenticated, isAdmin, async (req, res) => {
+  try {
+    const carts = await cartManager.getAllCarts();
+    res.status(200).json(carts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener todos los carritos" });
   }
 });
 

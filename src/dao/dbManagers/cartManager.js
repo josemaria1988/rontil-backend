@@ -58,33 +58,49 @@ class CartManager {
     }
   };
 
-  // ACTUALIZAR CARRITO CON NUEVO PRODUCTO
-  updateCartWithProducts = async (uid, newProducts) => {
+// ACTUALIZAR CARRITO CON NUEVO PRODUCTO
+updateCartWithProducts = async (uid, newProducts) => {
+  try {
+    const cart = await cartModel.findOne({ user: uid });
+    if (!cart) {
+      throw new Error("Carrito no encontrado");
+    }
+
+    newProducts.forEach((newProduct) => {
+      const productIndex = cart.items.findIndex(
+        (item) => item.product.toString() === newProduct.product.toString()
+      );
+
+      if (productIndex !== -1) {
+        // Si el producto ya está en el carrito, incrementa la cantidad
+        cart.items[productIndex].quantity += newProduct.quantity;
+      } else {
+        // Si el producto no está en el carrito, lo agrega
+        cart.items.push(newProduct);
+      }
+    });
+
+    cart.totalPrice = cart.items.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+
+    await cart.save();
+    return cart;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error al actualizar el carrito");
+  }
+};
+
+  // ACTUALIZAR CANTIDAD DE UN PRODUCTO EN EL CARRITO
+  updateProductQuantity = async (uid, pid, newQuantity) => {
     try {
       const cart = await cartModel.findOne({ user: uid });
       if (!cart) {
-        throw new Error("Carrito no encontrado");
-      }
-
-      cart.items = [...cart.items, ...newProducts];
-      cart.totalPrice = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
-
-      await cart.save();
-      return cart;
-    } catch (error) {
-      console.log(error);
-      throw new Error("Error al actualizar el carrito");
-    }
-  };
-
-  // ACTUALIZAR CANTIDAD DE UN PRODUCTO EN EL CARRITO
-  updateProductQuantity = async (cid, pid, newQuantity) => {
-    try {
-      const cart = await cartModel.findById(cid);
-      if (!cart) {
         throw new Error('Carrito no encontrado');
       }
-
+  
       const productIndex = cart.items.findIndex(item => item.product.toString() === pid);
       if (productIndex === -1) {
         throw new Error('Producto no encontrado en el carrito');
@@ -92,7 +108,7 @@ class CartManager {
       const quantityDifference = newQuantity - cart.items[productIndex].quantity;
       cart.items[productIndex].quantity = newQuantity;
       cart.totalPrice += cart.items[productIndex].price * quantityDifference;
-
+  
       await cart.save();
       return cart;
     } catch (error) {
@@ -102,9 +118,9 @@ class CartManager {
   }
 
   // ELIMINAR UN PRODUCTO DEL CARRITO
-  deleteProductFromCart = async (cid, pid) => {
+  deleteProductFromCart = async (uid, pid) => {
     try {
-      const cart = await cartModel.findOne({ _id: cid });
+      const cart = await cartModel.findOne({user: uid});
       if (!cart) {
         throw new Error('Carrito no encontrado');
       }
@@ -129,10 +145,10 @@ class CartManager {
   }
 
   //VACIAR UN CARRITO
-  clearCart = async (cid) => {
+  clearCart = async (uid) => {
 
     try {
-      const cart = await cartModel.findOne({ _id: cid });
+      const cart = await cartModel.findOne({ user: uid });
       if (!cart) {
         throw new Error('Carrito no encontrado');
       }
@@ -146,6 +162,21 @@ class CartManager {
       throw new Error('Error al eliminar todos los productos del carrito');
     }
   }
+
+  //SOLO PARA LAS RUTAS DE ADMIN
+  getAllCarts = async () => {
+    try {
+      const carts = await cartModel
+        .find({})
+        .populate("items.product")
+        .exec();
+  
+      return carts;
+    } catch (error) {
+      console.error("Error al obtener los carritos:", error);
+      throw new Error("Error al obtener los carritos");
+    }
+  };
 }
 
 export default CartManager;
