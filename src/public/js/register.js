@@ -18,4 +18,10 @@ form.addEventListener("submit", async (e) => {
 
   let result = await response.json();
   console.log(result);
+
+  if (response.status === 200) {
+    window.location.href = '/auth/login';
+  } else {
+    console.log('Error al registrarse:', result.message);
+  }
 });
