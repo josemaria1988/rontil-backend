@@ -12,7 +12,11 @@ const config = {
   githubClient: process.env.GITHUB_CLIENT_ID,
   githubAPP: process.env.GITHUB_APP_ID,
   githubSecret: process.env.GITHUB_CLIENT_SECRET,
-  githubCallBack: process.env.GITHUB_CALLBACK_URL
+  githubCallBack: process.env.GITHUB_CALLBACK_URL,
+
+  googleClient: process.env.GOOGLE_CLIENT_ID,
+  googleSecret: process.env.GOOGLE_CLIENT_SECRET,
+  googleCallBack: process.env.GOOGLE_CALLBACK_URL
 };
 
 export default config;

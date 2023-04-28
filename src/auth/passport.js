@@ -4,8 +4,16 @@ import local from "passport-local";
 import userModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import config from "../config.js";
+import GoogleStrategy from "passport-google-oauth20";
 
-const { githubClient, githubSecret, githubCallBack } = config;
+const { 
+  githubClient, 
+  githubSecret, 
+  githubCallBack, 
+  googleClient, 
+  googleSecret, 
+  googleCallBack 
+} = config;
 
 const LocalStrategy = local.Strategy;
 
@@ -63,6 +71,7 @@ const initializePassport = () => {
       }
     ),
 
+    //////////////////////////////// GITHUB LOGIN ////////////////////////////////
     passport.use("githublogin", new GitHubStrategy({
       clientID: githubClient,
       clientSecret: githubSecret,
@@ -101,6 +110,35 @@ const initializePassport = () => {
     let user = await userModel.findById(id);
     done(null, user);
   });
+
+  ////////// GOOGLE LOGIN //////////
+
+  passport.use( 'googlelogin', new GoogleStrategy( {
+    clientID: googleClient,
+    clientSecret: googleSecret,
+    callbackURL: googleCallBack
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      let user = await userModel.findOne({email: profile.emails[0].value});
+
+      if (!user) {
+        let newUser = {
+          first_name: profile.name.givenName,
+          last_name: profile.name.familyName,
+          age: 18,
+          email: profile.emails[0].value,
+          password: "",
+        };
+        let result = await userModel.create(newUser);
+        return done(null, result);
+      }
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+   
+  }))
 };
 
 export default initializePassport;

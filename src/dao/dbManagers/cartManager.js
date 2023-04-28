@@ -7,9 +7,10 @@ class CartManager {
   getCart = async (uid) => {
     try {
       console.log('Buscando carrito para el usuario:', uid);
-      const cart = await cartModel.findOne({ user: uid });
+      let cart = await cartModel.findOne({ user: uid });
       if (!cart) {
-        throw new Error("Carrito no encontrado");
+        console.log("Carrito no encontrado, creando uno nuevo.");
+        cart = await this.createEmptyCart(uid);
       }
       console.log("Carrito encontrado:", cart);
       return cart;

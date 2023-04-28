@@ -89,7 +89,16 @@ router.get('/github', passport.authenticate('githublogin', {scope: ['user:email'
 
 router.get('/githubcallback', passport.authenticate('githublogin', {failureRedirect: '/login'}), async (req, res) => {
   req.session.user = req.user;
-  res.redirect('/login')
+  res.redirect('/');
+})
+
+//LOGIN CON GOOGLE
+
+router.get('/google', passport.authenticate('googlelogin', {scope: ['profile', 'email']}), async(req, res) => {});
+
+router.get('/googlecallback', passport.authenticate('googlelogin', {failureRedirect: '/login'}), async (req, res) => {
+  req.session.user = req.user;
+  res.redirect('/');
 })
 
 export default router;
