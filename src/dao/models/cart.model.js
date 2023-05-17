@@ -4,7 +4,7 @@ import userModel from "./user.model.js";
 const cartsCollection = "carts";
 
 const cartsSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: userModel },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
   items: [{
     product: { type: mongoose.Schema.Types.ObjectId, ref: 'products' },
     quantity: { type: Number, required: true },

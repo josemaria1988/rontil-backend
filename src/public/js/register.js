@@ -20,8 +20,9 @@ form.addEventListener("submit", async (e) => {
   console.log(result);
 
   if (response.status === 200) {
-    window.location.href = '/auth/login';
-  } else {
+    localStorage.setItem('token', result.token);
+    window.location.href = '/api/products';
+} else {
     console.log('Error al registrarse:', result.message);
-  }
+}
 });

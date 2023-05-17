@@ -5,6 +5,8 @@ import userModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import config from "../config.js";
 import GoogleStrategy from "passport-google-oauth20";
+import jwt from "passport-jwt";
+
 
 const { 
   githubClient, 
@@ -12,10 +14,26 @@ const {
   githubCallBack, 
   googleClient, 
   googleSecret, 
-  googleCallBack 
+  googleCallBack,
+  jwtSecret 
 } = config;
 
 const LocalStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy;
+const ExtractJwt = jwt.ExtractJwt;
+
+const cookieExtractor = (req) => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["jwtCookie"];
+  }
+  return token;
+}
+
+const jwtOptions = {
+  secretOrKey: jwtSecret,
+  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor])
+}
 
 const initializePassport = () => {
   passport.use(
@@ -53,23 +71,13 @@ const initializePassport = () => {
     )
   );
 
-  passport.use(
-    "login",
-    new LocalStrategy(
-      { usernameField: "email" },
-      async (username, password, done) => {
-        try {
-          const user = await userModel.findOne({ email: username });
-          if (!user) return done(null, false);
-
-          if (!isValidPassword(user, password)) return done(null, false);
-
-          return done(null, user);
-        } catch (error) {
-          return done(error);
-        }
-      }
-    ),
+  passport.use("jwt", new JWTStrategy(jwtOptions, async (jwt_payload, done) => {
+    try {
+      return done(null, jwt_payload);
+    } catch (error) {
+      return done(error);
+    }
+  })),
 
     //////////////////////////////// GITHUB LOGIN ////////////////////////////////
     passport.use("githublogin", new GitHubStrategy({
@@ -100,7 +108,7 @@ const initializePassport = () => {
       }
 
     }))
-  );
+  
 
   passport.serializeUser((user, done) => {
     done(null, user._id);

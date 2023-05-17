@@ -7,7 +7,7 @@ const config = {
   dbPassword: process.env.DB_PASSWORD,
   dbHost: process.env.DB_HOST,
   dbUrl: `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`,
-  sessionSecret: process.env.SESSION_SECRET,
+  jwtSecret: process.env.JWT_SECRET,
 
   githubClient: process.env.GITHUB_CLIENT_ID,
   githubAPP: process.env.GITHUB_APP_ID,

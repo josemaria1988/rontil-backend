@@ -11,15 +11,14 @@ form.addEventListener("submit", async (e) => {
   let response = await fetch("/auth/login", {
     method: "POST",
     body: JSON.stringify(obj),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json"},
   });
 
   let result = await response.json();
   console.log(result);
 
   if (result.status === "success") {
+    localStorage.setItem("jwtCookie", result.token);
     window.location.href = "/api/products";
   }
 });
