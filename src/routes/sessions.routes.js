@@ -69,7 +69,8 @@ router.post(
       status: "success",
       message: "Login succesful",
     });
-  });
+  }
+);
 
 router.get("/failLogin", (req, res) => {
   res.send({ status: "error", error: "failed login" });

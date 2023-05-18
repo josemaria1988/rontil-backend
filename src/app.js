@@ -8,16 +8,13 @@ import cartsRouter from './routes/cart.routes.js';
 import productsRouter from './routes/products.routes.js';
 import viewsRouter from './routes/views.routes.js';
 import chatRouter from './routes/chat.routes.js';
-import session from "express-session";
 import cookieParser from "cookie-parser";
-
 import sessionsRouter from "./routes/sessions.routes.js";
 import passport from "passport";
 import initializePassport from "./auth/passport.js";
-import config from "./config.js";
-import MongoStore from "connect-mongo";
 import database from "./db.js";
 import createAdminUser from "./init.js";
+import { decodeToken } from "./utils.js";
 
 // Initialization Express
 const app = express();
@@ -56,7 +53,7 @@ initializePassport()
 app.use(passport.initialize());
 
 
-
+app.use(decodeToken);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/chat', chatRouter);

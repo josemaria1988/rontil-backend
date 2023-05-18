@@ -2,9 +2,12 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import bcrypt from "bcrypt";
 import CartManager from "./dao/dbManagers/cartManager.js";
-import jwt from "jsonwebtoken"
+import UserManager from "./dao/dbManagers/userManager.js";
+import jwt from "jsonwebtoken";
+import config from "./config.js";
 
 const cartManager = new CartManager();
+const userManager = new UserManager();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,33 +16,51 @@ export const createHash = (password) => bcrypt.hashSync(password, bcrypt.genSalt
 
 export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password);
 
+//VERIFICAR SI EL USUARIO ESTÁ LOGUEADO
 export const isAuthenticated = async (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) {
-    return res.redirect('/auth/login');
-  }
+  if (req.user) {
+    try {
+      // Buscar al usuario en la base de datos
+      const user = await userManager.getUserByEmail(req.user.email);
+      if (!user) {
+        return res.redirect('/auth/login');
+      }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = user;
 
-    const user = await userManager.getUserByEmail(decoded.email);
-    if (!user) {
+      const cart = await cartManager.getCart(user._id);
+      if (cart) {
+        req.user.cart = cart;
+      } else {
+        console.error("Error al obtener el carrito del usuario");
+      }
+
+      next();
+    } catch (err) {
+      console.error(err);
       return res.redirect('/auth/login');
     }
-
-    req.user = user;
-
-    const cart = await cartManager.getCart(user._id);
-    if (cart) {
-      req.user.cart = cart;
-    } else {
-      console.error("Error al obtener el carrito del usuario");
-    }
-
-    next();
-  } catch (err) {
-    console.error(err);
+  } else {
     return res.redirect('/auth/login');
+  }
+};
+
+//LEER COOKIE, VERIFICAR TOKEN Y GUARDAR DATOS EN REQ.USER PARA QUE LLEGUEN A LAS VISTAS DE HANDLEBARS
+export const decodeToken = (req, res, next) => {
+  // Leer la cookie
+  const token = req.cookies['jwtCookie'];
+  // Verificar el token
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, config.jwtSecret);
+      req.user = decoded;
+      next();
+    } catch (err) {
+      console.error(err);
+      next();
+    }
+  } else {
+    next();
   }
 };
 

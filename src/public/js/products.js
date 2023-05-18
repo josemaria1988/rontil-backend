@@ -7,13 +7,9 @@ const addToCart = async (event) => {
     
     
     try {
-      // Obtener el carrito del usuario
-      let token = localStorage.getItem("jwtCookie");
       let cartResponse = await fetch("http://localhost:8080/api/carts/cart", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json"},
+        credentials: 'include',
       });
       const cart = await cartResponse.json();
   
@@ -30,7 +26,8 @@ const addToCart = async (event) => {
         const newQuantity = cart.items[existingItemIndex].quantity + 1;
         const updateResponse = await fetch(`http://localhost:8080/api/carts/cart/products/${productId}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
+          headers: { "Content-Type": "application/json"},
+          credentials: 'include',
           body: JSON.stringify({ quantity: newQuantity }),
         });
   
@@ -49,7 +46,8 @@ const addToCart = async (event) => {
   
         const addResponse = await fetch(`http://localhost:8080/api/carts/cart`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
+          headers: { "Content-Type": "application/json"},
+          credentials: 'include',
           body: JSON.stringify({ items: [newProduct] }),
         });
   

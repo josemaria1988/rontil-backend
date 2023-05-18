@@ -5,11 +5,11 @@ updateButtons.forEach(updateButton => {
         const productId = event.target.dataset.productId;
         const input = event.target.parentElement.querySelector('.quantity-input');
         const newQuantity = input.value;
-        const token = localStorage.getItem("jwtCookie")
 
         const response = await fetch(`/api/carts/cart/products/${productId}`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
+            headers: { "Content-Type": "application/json"},
+            credentials: 'include',
             body: JSON.stringify({quantity: Number(newQuantity)})
         });
 
@@ -28,9 +28,8 @@ const clearCart = async () => {
   try {
     const response = await fetch(`/api/carts/cart`, {
       method: "DELETE",
-      headers: {
-        'Content-type': 'application/json'
-      },
+      headers: { "Content-Type": "application/json"},
+      credentials: 'include',
       body: ""
     });
 
@@ -58,9 +57,8 @@ removeProductButtons.forEach(removeButton => {
 
     const response = await fetch(`/api/carts/cart/products/${productId}`, {
       method: "DELETE",
-      headers: {
-        'Content-type': 'application/json'
-      }
+      headers: { "Content-Type": "application/json"},
+      credentials: 'include',
     });
 
     if (response.ok) {
