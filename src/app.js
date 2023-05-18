@@ -36,6 +36,14 @@ const hbs = expressHandlebars.create({
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
     allowProtoMethodsByDefault: true,
+  },
+  helpers: {
+    eq: (val1, val2) => {
+      return val1 === val2;
+    },
+    json: function(context) {
+      return JSON.stringify(context);
+    }
   }
 })
 
@@ -43,9 +51,9 @@ const hbs = expressHandlebars.create({
 app.engine("handlebars", hbs.engine);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
-handlebars.registerHelper("eq", (val1, val2) => {
+/* handlebars.registerHelper("eq", (val1, val2) => {
   return val1 === val2;
-});
+}); */
 
 //User Sessions
 app.use(cookieParser());
@@ -66,4 +74,4 @@ const httpServer = app.listen(port, () => {
 
 socket.connect(httpServer);
 
-createAdminUser();
+// createAdminUser();

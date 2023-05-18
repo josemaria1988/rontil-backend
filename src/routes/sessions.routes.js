@@ -12,9 +12,14 @@ const cartManager = new CartManager();
 const userManager = new UserManager();
 
 const generateJwtUser = (user) => {
-  const payload = {_id: user._id, name: `${user.first_name} ${user.last_name}`, cart: user.cart, email: user.email, role: user.role };
-  const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
-  return token;
+  const { _id, first_name, last_name, cart, email, role } = user;
+  const payload = { _id, name: `${first_name} ${last_name}`, cart, email, role };
+  try {
+    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '24h' });
+    return token;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 router.post(
@@ -57,13 +62,13 @@ router.post(
   "/login",
   async (req, res) => {
     const { email, password } = req.body;
-    const user = await userManager.getUserByEmail( email );
+    const user = await userManager.getUserByEmail(email);
 
     if (!user) return res.status(401).send({ status: "error", error: "User does not exist" });
 
     if (!isValidPassword(user, password)) return res.status(401).send({ status: "error", error: "Invalid credentials" });
 
-    const token = generateJwtUser(req.user);
+    const token = generateJwtUser(user);
 
     return res.cookie("jwtCookie", token, { httpOnly: true }).send({
       status: "success",
@@ -101,7 +106,7 @@ router.put("/restore", async (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
-  res.clearCookie("jwtCookie").send({status: "success", message: "log out successful"})
+  res.clearCookie("jwtCookie").send({ status: "success", message: "log out successful" })
 });
 
 
