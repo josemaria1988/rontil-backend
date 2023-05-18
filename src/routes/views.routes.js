@@ -34,6 +34,19 @@ router.get("/auth/login", async (req, res) => {
   res.render("login", { style: "styles.css", title: "Login" })
 });
 
+// Nueva ruta /products
+router.get("/products", async (req, res) => {
+  const products = JSON.parse(JSON.stringify(await manager.getProducts(req)));
+  let cartId = null;
+  if (req.user) {
+    const cart = await cartModel.findOne({ user: req.user._id });
+    if (cart) {
+      cartId = cart._id;
+    }
+  }
+  res.render("products", { products: products.docs, user: req.user, cartId: cartId, style: "styles.css", title: "Products" })
+});
+
 //Mostrar carrito por ID de usuario en sesion.
 router.get('/cart', isAuthenticated, async (req, res) => {
   console.log("Inicio del controlador del carrito");
