@@ -10,7 +10,7 @@ export default class ProductManager {
         const filters = options.filters || {};
         const sort = options.sort || undefined;
       
-        const query = {};
+        const query = { };
       
         if (filters.category) {
           query.category = filters.category;
