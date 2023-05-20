@@ -12,28 +12,37 @@ const colorSchema = new mongoose.Schema({
 }, {_id: false});
 
 const productsSchema = new mongoose.Schema({
-    id: { 
+    title: { 
+        type: String, 
+        required: true 
+    },
+    description: { 
+        type: String, 
+        required: true 
+    },
+    code: { 
+        type: String, 
+        required: true 
+    },
+    price: { 
         type: Number, 
-        required: true, 
-        unique: true 
-    },
-    nombre: { 
-        type: String, 
         required: true 
     },
-    tipo: { 
-        type: String, 
+    status: { 
+        type: Boolean, 
         required: true 
     },
-    cantidad: { 
+    stock: { 
         type: Number, 
         required: true 
     },
-    desc: { 
+    category: { 
         type: String, 
         required: true 
     },
-    color: [colorSchema]
+    thumbnails: { 
+        type: Array 
+    }
 });
 productsSchema.plugin(mongoosePaginate);
 
