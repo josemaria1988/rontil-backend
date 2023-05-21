@@ -1,18 +1,18 @@
 import { Router } from "express";
-import productManager from '../dao/dbManagers/productManager.js';
-import CartManager from "../dao/dbManagers/cartManager.js";
-import cartModel from "../dao/models/cart.model.js";
-import { isAuthenticated, isAdmin } from "../utils.js";
+import ProductsController from '../services/products.services.js';
+import CartsController from "../services/carts.services.js";
+import cartModel from "../dao/repositories/carts.repository.js";
+import { isAuthenticated, isAdmin } from "../utils/utils.js";
 
 
 
 const router = Router();
-const manager = new productManager();
-const cartManager = new CartManager();
+const productController = new ProductsController();
+const cartController = new CartsController();
 
 //Renderizar HOME
 router.get("/", async (req, res) => {
-  const products = JSON.parse(JSON.stringify(await manager.getProducts(req)));
+  const products = JSON.parse(JSON.stringify(await productController.getProducts(req)));
   let cartId = null;
   if (req.user) {
     const cart = await cartModel.findOne({ user: req.user._id });
@@ -46,8 +46,8 @@ router.get('/products', async (req, res) => {
   };
 
   try {
-    const products = await manager.getProducts(options);
-    const totalProducts = await manager.countProducts(filters);
+    const products = await productController.getProducts(options);
+    const totalProducts = await productController.countProducts(filters);
     const totalPages = Math.ceil(totalProducts / limit);
 
     if (!products) {
@@ -72,7 +72,7 @@ router.get('/products', async (req, res) => {
 //mostrar producto por id
 router.get('/products/:pid', async (req, res) => {
   const pid = req.params.pid;
-  const product = await manager.getProductById(pid);
+  const product = await productController.getProductById(pid);
   if (!product) {
     res.status(404).send(`No se encontró el producto con id ${pid}`);
   } else {
@@ -98,7 +98,7 @@ router.get('/cart', isAuthenticated, async (req, res) => {
   console.log("Inicio del controlador del carrito");
   try {
     const uid = req.user._id;
-    const cart = await cartManager.getCart(uid)
+    const cart = await cartController.getCart(uid)
     res.render("cart", { cart: cart, cid: cart._id, user: req.user, style: "styles.css", title: "Cart" });
   } catch (error) {
     console.error(error);
@@ -109,7 +109,7 @@ router.get('/cart', isAuthenticated, async (req, res) => {
 // Renderizar todos los carritos (solo para administradores)
 router.get('/all-carts', isAuthenticated, isAdmin, async (req, res) => {
   try {
-    const carts = await cartManager.getAllCarts();
+    const carts = await cartController.getAllCarts();
     res.render('allCarts', { carts, user: req.user, style: "styles.css", title: "Ordenes-Carritos" });
   } catch (error) {
     console.error(error);

@@ -1,15 +1,14 @@
 import { Router } from "express";
-import { createHash, isValidPassword } from "../utils.js";
-import userModel from "../dao/models/user.model.js";
-import UserManager from "../dao/dbManagers/userManager.js";
-import CartManager from "../dao/dbManagers/cartManager.js"
+import { createHash, isValidPassword } from "../utils/utils.js";
+import UsersServices from "../services/users.services.js";
+import CartsServices from "../services/carts.services.js";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import config from "../config.js";
 
 const router = Router();
-const cartManager = new CartManager();
-const userManager = new UserManager();
+const cartManager = new CartsServices();
+const userManager = new UsersServices();
 
 const generateJwtUser = (user) => {
   const { _id, first_name, last_name, cart, email, role } = user;

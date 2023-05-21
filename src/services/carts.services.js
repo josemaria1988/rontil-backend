@@ -1,13 +1,13 @@
-import cartModel from "../models/cart.model.js";
+import cartRepository from "../dao/repositories/carts.repository.js";
 
-class CartManager {
+class CartService {
   constructor() { };
 
   //OBTENER CARRITO
   getCart = async (uid) => {
     try {
       console.log('Buscando carrito para el usuario:', uid);
-      let cart = await cartModel.findOne({ user: uid });
+      let cart = await cartRepository.findOne({ user: uid });
       if (!cart) {
         console.log("Carrito no encontrado, creando uno nuevo.");
         cart = await this.createEmptyCart(uid);
@@ -28,7 +28,7 @@ class CartManager {
         quantity: quantity
       };
 
-      const newCart = new cartModel({
+      const newCart = new cartRepository({
         user: uid,
         items: [newCartItem],
         totalPrice: price * quantity
@@ -45,7 +45,7 @@ class CartManager {
   //CREAR CARRITO VACÍO
   createEmptyCart = async (uid) => {
     try {
-      const newCart = new cartModel({
+      const newCart = new cartRepository({
         user: uid,
         items: [],
         totalPrice: 0
@@ -62,7 +62,7 @@ class CartManager {
 // ACTUALIZAR CARRITO CON NUEVO PRODUCTO
 updateCartWithProducts = async (uid, newProducts) => {
   try {
-    const cart = await cartModel.findOne({ user: uid });
+    const cart = await cartRepository.findOne({ user: uid });
     if (!cart) {
       throw new Error("Carrito no encontrado");
     }
@@ -97,7 +97,7 @@ updateCartWithProducts = async (uid, newProducts) => {
   // ACTUALIZAR CANTIDAD DE UN PRODUCTO EN EL CARRITO
   updateProductQuantity = async (uid, pid, newQuantity) => {
     try {
-      const cart = await cartModel.findOne({ user: uid });
+      const cart = await cartRepository.findOne({ user: uid });
       if (!cart) {
         throw new Error('Carrito no encontrado');
       }
@@ -121,7 +121,7 @@ updateCartWithProducts = async (uid, newProducts) => {
   // ELIMINAR UN PRODUCTO DEL CARRITO
   deleteProductFromCart = async (uid, pid) => {
     try {
-      const cart = await cartModel.findOne({user: uid});
+      const cart = await cartRepository.findOne({user: uid});
       if (!cart) {
         throw new Error('Carrito no encontrado');
       }
@@ -149,7 +149,7 @@ updateCartWithProducts = async (uid, newProducts) => {
   clearCart = async (uid) => {
 
     try {
-      const cart = await cartModel.findOne({ user: uid });
+      const cart = await cartRepository.findOne({ user: uid });
       if (!cart) {
         throw new Error('Carrito no encontrado');
       }
@@ -167,7 +167,7 @@ updateCartWithProducts = async (uid, newProducts) => {
   //SOLO PARA LAS RUTAS DE ADMIN
   getAllCarts = async () => {
     try {
-      const carts = await cartModel
+      const carts = await cartRepository
         .find({})
         .populate("items.product")
         .exec();
@@ -180,4 +180,4 @@ updateCartWithProducts = async (uid, newProducts) => {
   };
 }
 
-export default CartManager;
+export default CartService;

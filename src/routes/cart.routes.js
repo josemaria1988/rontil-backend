@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import CartManager from '../dao/dbManagers/cartManager.js';
-import ProductManager from '../dao/dbManagers/productManager.js';
-import {isAuthenticated, isAdmin} from "../utils.js";
+import CartService from '../services/carts.services.js';
+import ProductService from '../services/products.services.js';
+import {isAuthenticated, isAdmin} from "../utils/utils.js";
 
-const cartManager = new CartManager();
-const productManager = new ProductManager();
+const cartManager = new CartService();
+const productManager = new ProductService();
 
 const router = Router();
 

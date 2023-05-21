@@ -1,13 +1,13 @@
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import bcrypt from "bcrypt";
-import CartManager from "./dao/dbManagers/cartManager.js";
-import UserManager from "./dao/dbManagers/userManager.js";
+import CartsServices from "../services/carts.services.js";
+import UsersServices from "../services/users.services.js";
 import jwt from "jsonwebtoken";
-import config from "./config.js";
+import config from "../config.js";
 
-const cartManager = new CartManager();
-const userManager = new UserManager();
+const cartManager = new CartsServices();
+const userManager = new UsersServices();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

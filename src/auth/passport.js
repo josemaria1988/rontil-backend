@@ -1,8 +1,8 @@
 import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import local from "passport-local";
-import userModel from "../dao/models/user.model.js";
-import { createHash, isValidPassword } from "../utils.js";
+import userModel from "../dao/schemas/user.schema.js";
+import { createHash, isValidPassword } from "../utils/utils.js";
 import config from "../config.js";
 import GoogleStrategy from "passport-google-oauth20";
 import jwt from "passport-jwt";

@@ -1,9 +1,8 @@
 import express from "express";
 import morgan from "morgan";
-import socket from "./socket.js";
 import handlebars from "handlebars";
 import expressHandlebars from "express-handlebars";
-import __dirname from "./utils.js";
+import __dirname from "./utils/utils.js";
 import cartsRouter from './routes/cart.routes.js';
 import productsRouter from './routes/products.routes.js';
 import viewsRouter from './routes/views.routes.js';
@@ -13,8 +12,7 @@ import sessionsRouter from "./routes/sessions.routes.js";
 import passport from "passport";
 import initializePassport from "./auth/passport.js";
 import database from "./db.js";
-import createAdminUser from "./init.js";
-import { decodeToken } from "./utils.js";
+import { decodeToken } from "./utils/utils.js";
 
 // Initialization Express
 const app = express();
@@ -71,7 +69,5 @@ app.use("/auth", sessionsRouter);
 const httpServer = app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
 });
-
-socket.connect(httpServer);
 
 // createAdminUser();

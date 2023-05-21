@@ -1,45 +1,17 @@
 import { Router } from 'express';
-import ProductManager from '../dao/dbManagers/productManager.js';
+import ProductsServices from '../services/products.services.js';
 
-const manager = new ProductManager();
+const manager = new ProductsServices();
 
 const router = Router();
 
 //crear un nuevo producto
-router.post('/', async (req, res) => {
-  try {
-    let newProduct = req.body
-    await manager.addProduct(newProduct)
-    console.log(newProduct)
-    return res.send({ status: "success", payload: newProduct });
-
-  } catch (error) {
-    res.status(500).json({error: error.message})
-  }
-})
+router.post('/', (req, res) => manager.addProduct(req, res));
 
 //modificar un producto
-router.put('/:pid', async (req, res) => {
-  try {
-    const pid = req.params.pid;
-    const fieldsToUpdate = req.body
-    const updatedProduct = await manager.updateProduct(pid, fieldsToUpdate);
-    console.log(updatedProduct);
-    return res.send({ status: "success", payload: updatedProduct });
-  } catch(error) {
-    res.status(500).json({error: error.message})
-  }
-});
+router.put('put', (req, res) => manager.updateProduct(req, res));
 
 //borrar un producto
-router.delete('/:pid', async (req, res) => {
-  try {
-    const pid = req.params.pid;
-    const deletedProduct = await manager.deleteProduct(pid);
-    return res.send({ status: "success", payload: deletedProduct });
-  } catch (error) {
-    res.status(500).json({error: error.message})
-  }
-})
+router.delete('/:pid', (req, res) => manager.deleteProduct(pid));
 
 export default router;

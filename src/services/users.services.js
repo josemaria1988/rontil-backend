@@ -1,11 +1,11 @@
-import userModel from "../models/user.model.js";
+import userRepository from "../dao/repositories/users.repository.js";
 
-class UserManager {
+class UserService {
 
 
     getUserByEmail = async (email) => {
         try {
-            const user = await userModel.findOne({ email: email });
+            const user = await userRepository.findOne({ email: email });
             return user;
         } catch (error) {
             console.error(error);
@@ -15,12 +15,12 @@ class UserManager {
 
     createUser = async (first_name, email, password) => {
         try {
-            const existingUser = await userModel.find({ email });
+            const existingUser = await userRepository.find({ email });
             if (existingUser) {
                 throw new Error("El correo electrónico ya está en uso");
             }
 
-            const newUser = new userModel({
+            const newUser = new userRepository({
                 first_name,
                 email,
                 password
@@ -35,4 +35,4 @@ class UserManager {
     }
 }
 
-export default UserManager;
+export default UserService;

@@ -1,7 +1,4 @@
 import mongoose from "mongoose";
-import userModel from "./user.model.js";
-
-const cartsCollection = "carts";
 
 const cartsSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
@@ -13,6 +10,4 @@ const cartsSchema = new mongoose.Schema({
   totalPrice: { type: Number, default: 0 },
 });
 
-const cartModel = mongoose.model(cartsCollection, cartsSchema);
-
-export default cartModel;
+export default cartsSchema;
