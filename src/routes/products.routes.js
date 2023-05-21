@@ -1,17 +1,12 @@
 import { Router } from 'express';
-import ProductsServices from '../services/products.services.js';
-
-const manager = new ProductsServices();
+import ProductController from '../controllers/products.controllers.js';
 
 const router = Router();
+const productController = new ProductController();
 
-//crear un nuevo producto
-router.post('/', (req, res) => manager.addProduct(req, res));
-
-//modificar un producto
-router.put('put', (req, res) => manager.updateProduct(req, res));
-
-//borrar un producto
-router.delete('/:pid', (req, res) => manager.deleteProduct(pid));
+router.post('/', productController.addProduct);
+router.get('/', productController.getProducts);
+router.put('/:pid', productController.updateProduct);
+router.delete('/:pid', productController.deleteProduct);
 
 export default router;
