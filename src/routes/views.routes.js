@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 //Renderizar Products
 //Mostrar todos los productos
 //Mostrar productos por categoría y con paginación
-router.get('/products', async (req, res) => {
+router.get('/products', isAuthenticated, async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
   const category = req.query.category || "";
@@ -70,13 +70,13 @@ router.get('/products', async (req, res) => {
 });
 
 //mostrar producto por id
-router.get('/products/:pid', async (req, res) => {
+router.get('/products/:pid', isAuthenticated, async (req, res) => {
   const pid = req.params.pid;
   const product = await productController.getProductById(pid);
   if (!product) {
     res.status(404).send(`No se encontró el producto con id ${pid}`);
   } else {
-    return res.send({ status: "success", payload: product });
+    return res.render('singleproduct', { product: product, style: "styles.css", title: "Single Product", user: req.user });
   }
 });
 

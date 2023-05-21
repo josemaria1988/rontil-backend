@@ -7,7 +7,7 @@ const addToCart = async (event) => {
     
     
     try {
-      let cartResponse = await fetch("http://localhost:8080/api/carts/cart", {
+      let cartResponse = await fetch("http://localhost:8080/api/carts", {
         headers: { "Content-Type": "application/json"},
         credentials: 'include',
       });
@@ -24,7 +24,7 @@ const addToCart = async (event) => {
       if (existingItemIndex !== -1) {
         // Si el producto ya está en el carrito, actualizar la cantidad
         const newQuantity = cart.items[existingItemIndex].quantity + 1;
-        const updateResponse = await fetch(`http://localhost:8080/api/carts/cart/products/${productId}`, {
+        const updateResponse = await fetch(`http://localhost:8080/api/carts/cart/${productId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json"},
           credentials: 'include',
