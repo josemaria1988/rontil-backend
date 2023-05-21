@@ -1,8 +1,8 @@
 import { Router } from "express";
 import ProductsController from '../services/products.services.js';
 import CartsController from "../services/carts.services.js";
-import cartModel from "../dao/repositories/carts.repository.js";
-import { isAuthenticated, isAdmin } from "../utils/utils.js";
+import cartRepository from "../dao/repositories/carts.repository.js";
+import { isAuthenticated, isAdmin } from "../utils.js";
 
 
 
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
   const products = JSON.parse(JSON.stringify(await productController.getProducts(req)));
   let cartId = null;
   if (req.user) {
-    const cart = await cartModel.findOne({ user: req.user._id });
+    const cart = await cartRepository.findOne({ user: req.user._id });
     if (cart) {
       cartId = cart._id;
     }

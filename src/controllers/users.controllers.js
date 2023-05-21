@@ -1,5 +1,5 @@
 import UserService from "../services/users.services.js";
-import { isValidPassword } from "../utils/utils.js";
+import { isValidPassword } from "../utils.js";
 
 class UserController {
   constructor() {

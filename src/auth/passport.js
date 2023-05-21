@@ -1,8 +1,8 @@
 import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import local from "passport-local";
-import userModel from "../dao/schemas/user.schema.js";
-import { createHash, isValidPassword } from "../utils/utils.js";
+import userRepository from "../dao/repositories/users.repository.js";
+import { createHash, isValidPassword } from "../utils.js";
 import config from "../config.js";
 import GoogleStrategy from "passport-google-oauth20";
 import jwt from "passport-jwt";
@@ -47,7 +47,7 @@ const initializePassport = () => {
         try {
           const { first_name, last_name, email, age } = req.body;
 
-          let user = await userModel.findOne({ email: username });
+          let user = await userRepository.findOne({ email: username });
           if (user) {
             console.log("User already exists");
             return done(null, false);
@@ -61,7 +61,7 @@ const initializePassport = () => {
             password: createHash(password),
           };
 
-          let result = await userModel.create(newUser);
+          let result = await userRepository.create(newUser);
 
           return done(null, result);
         } catch (error) {
@@ -87,7 +87,7 @@ const initializePassport = () => {
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await userModel.findOne({ email: profile._json.email });
+        let user = await userRepository.findOne({ email: profile._json.email });
         
         if (!user) {
           let newUser = {
@@ -98,7 +98,7 @@ const initializePassport = () => {
             password: "",
           };
 
-          let result = await userModel.create(newUser);
+          let result = await userRepository.create(newUser);
           return done(null, result);
         }
 
@@ -115,7 +115,7 @@ const initializePassport = () => {
   });
 
   passport.deserializeUser(async (id, done) => {
-    let user = await userModel.findById(id);
+    let user = await userRepository.findById(id);
     done(null, user);
   });
 
@@ -128,7 +128,7 @@ const initializePassport = () => {
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      let user = await userModel.findOne({email: profile.emails[0].value});
+      let user = await userRepository.findOne({email: profile.emails[0].value});
 
       if (!user) {
         let newUser = {
@@ -138,7 +138,7 @@ const initializePassport = () => {
           email: profile.emails[0].value,
           password: "",
         };
-        let result = await userModel.create(newUser);
+        let result = await userRepository.create(newUser);
         return done(null, result);
       }
       return done(null, user);

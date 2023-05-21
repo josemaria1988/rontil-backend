@@ -2,7 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import handlebars from "handlebars";
 import expressHandlebars from "express-handlebars";
-import __dirname from "./utils/utils.js";
+import __dirname from "./utils.js";
 import cartsRouter from './routes/cart.routes.js';
 import productsRouter from './routes/products.routes.js';
 import viewsRouter from './routes/views.routes.js';
@@ -12,7 +12,7 @@ import sessionsRouter from "./routes/sessions.routes.js";
 import passport from "passport";
 import initializePassport from "./auth/passport.js";
 import database from "./db.js";
-import { decodeToken } from "./utils/utils.js";
+import { decodeToken } from "./utils.js";
 
 // Initialization Express
 const app = express();
@@ -49,9 +49,7 @@ const hbs = expressHandlebars.create({
 app.engine("handlebars", hbs.engine);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
-/* handlebars.registerHelper("eq", (val1, val2) => {
-  return val1 === val2;
-}); */
+console.log(`${__dirname}/views`);
 
 //User Sessions
 app.use(cookieParser());

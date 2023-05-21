@@ -1,11 +1,9 @@
-import ProductsRepository from "../dao/repositories/products.repository.js";
-
-const productRepository = new ProductsRepository();
+import productsRepository from "../dao/repositories/products.repository.js";
 
 class ProductsServices {
   
   getProducts = async (req) => {
-    options = req || {};
+    let options = req || {};
     const limit = options.limit || 10;
     const page = options.page || 1;
     const filters = options.filters || {};
@@ -30,7 +28,7 @@ class ProductsServices {
     }
   
     try {
-      const products = await productRepository.paginate(query, { page, limit, sort: sortOrder });
+      const products = await productsRepository.paginate(query, { page, limit, sort: sortOrder });
       return products;
     } catch (error) {
       console.log(error);
@@ -55,7 +53,7 @@ class ProductsServices {
         }
       }
   
-      const count = await productRepository.countDocuments(filter);
+      const count = await productsRepository.countDocuments(filter);
       return count;
     } catch (error) {
       console.log(error);
@@ -64,20 +62,20 @@ class ProductsServices {
   };
 
   getProductById = async (productId) => {
-    return await productRepository.findById(productId);
+    return await productsRepository.findById(productId);
   };
 
   addProduct = async (productData) => {
-    const newProduct = new productRepository(productData);
+    const newProduct = new productsRepository(productData);
     return await newProduct.save();
   };
 
   updateProduct = async (productId, productData) => {
-    return await productRepository.findByIdAndUpdate(productId, productData, { new: true });
+    return await productsRepository.findByIdAndUpdate(productId, productData, { new: true });
   };
 
   deleteProduct = async (productId) => {
-    return await productRepository.findByIdAndDelete(productId);
+    return await productsRepository.findByIdAndDelete(productId);
   };
 }
 

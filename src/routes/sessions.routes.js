@@ -9,6 +9,8 @@ router.post("/register", passport.authenticate("register", { session: false, fai
 router.post("/login", userController.loginUser);
 router.put("/restore", userController.restoreUserPassword);
 router.get("/logout", userController.logoutUser);
+router.get('/google', passport.authenticate('googlelogin', { scope: ['profile', 'email'] }));
+router.get('/github', passport.authenticate('githublogin'));
 router.get("/githubcallback", passport.authenticate('githublogin', { failureRedirect: '/login', session: false }), userController.generateTokenAfterGithubLogin);
 router.get("/googlecallback", passport.authenticate('googlelogin', { failureRedirect: '/login', session: false }), userController.generateTokenAfterGoogleLogin);
 
