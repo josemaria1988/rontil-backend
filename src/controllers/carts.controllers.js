@@ -103,6 +103,17 @@ class CartController {
       res.status(500).json({ message: "Error al obtener todos los carritos" });
     }
   };
+
+  checkout = async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const total = await this.cartService.checkout(userId);
+      res.json({ total: total });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error.message);
+    }
+  }
 }
 
 export default CartController;

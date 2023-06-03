@@ -77,6 +77,32 @@ class ProductsServices {
   deleteProduct = async (productId) => {
     return await productsRepository.findByIdAndDelete(productId);
   };
+
+  updateStock = async (productId, quantity) => {
+    try {
+      // Buscar el producto
+      let product = await productsRepository.findById(productId);
+
+      if (!product) {
+        throw new Error('Producto no encontrado');
+      }
+
+      // Actualizar el stock
+      product.stock -= quantity;
+
+      if (product.stock < 0) {
+        throw new Error('No hay suficiente stock del producto');
+      }
+
+      // Guardar el producto
+      await product.save();
+
+      return product;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
 
 export default ProductsServices;

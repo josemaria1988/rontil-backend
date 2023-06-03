@@ -1,4 +1,7 @@
 import cartRepository from "../dao/repositories/carts.repository.js";
+import ProductsServices from "./products.services.js";
+
+const productService = new ProductsServices();
 
 class CartService {
   constructor() { };
@@ -6,13 +9,11 @@ class CartService {
   //OBTENER CARRITO
   getCart = async (uid) => {
     try {
-      console.log('Buscando carrito para el usuario:', uid);
       let cart = await cartRepository.findOne({ user: uid });
       if (!cart) {
         console.log("Carrito no encontrado, creando uno nuevo.");
         cart = await this.createEmptyCart(uid);
       }
-      console.log("Carrito encontrado:", cart);
       return cart;
     } catch (error) {
       console.log(error);
@@ -178,6 +179,36 @@ updateCartWithProducts = async (uid, newProducts) => {
       throw new Error("Error al obtener los carritos");
     }
   };
+
+  checkout = async (uid) => {
+    try {
+
+      const cart = await this.getCart(uid)
+      
+      if (!cart || cart.items.length === 0) {
+        throw new Error ('El carrito está vacío');
+      }
+      
+      let total = 0;
+      for (let item of cart.items) {
+        const product = await productService.getProductById(item.product);
+        if (product.stock < item.quantity) {
+          throw new Error (`No hay suficiente stock para el producto ${product.title}`)
+        }
+        await productService.updateStock(product._id, item.quantity)
+        total += item.quantity * product.price;
+      }
+      
+      await this.clearCart(uid)
+      
+      return total
+    } catch (error) {
+      console.error(error);
+      throw new Error('Error al realizar el checkout: ' + error.message);
+    }
+
+
+  }
 }
 
 export default CartService;

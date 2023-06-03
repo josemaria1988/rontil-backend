@@ -1,6 +1,14 @@
 import UserService from "../services/users.services.js";
 import { isValidPassword } from "../utils.js";
 
+class GetCurrentUserDTO {
+  constructor (user) {
+    this.name = user.first_name;
+    this.role = user.role;
+    this.cart = user.cart.length;
+  }
+}
+
 class UserController {
   constructor() {
     this.userService = new UserService();
@@ -68,6 +76,12 @@ class UserController {
     res.cookie('jwtCookie', token, { httpOnly: true });
     res.redirect('/');
   };
+
+  getCurrentUser = async (req, res) => {
+    const user = req.user;
+    const userDTO = new GetCurrentUserDTO(user)
+    res.json(userDTO);
+  }
 }
 
 export default UserController;

@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import passport from "passport";
 import UserController from '../controllers/users.controllers.js';
+import { isAuthenticated } from '../utils.js';
 
 const router = Router();
 const userController = new UserController();
 
 router.post("/register", passport.authenticate("register", { session: false, failureRedirect: "/failRegister" }), userController.registerUser, userController.generateTokenAfterRegister);
 router.post("/login", userController.loginUser);
+router.get("/current", isAuthenticated, userController.getCurrentUser);
 router.put("/restore", userController.restoreUserPassword);
 router.get("/logout", userController.logoutUser);
 router.get('/google', passport.authenticate('googlelogin', { scope: ['profile', 'email'] }));

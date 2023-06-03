@@ -22,8 +22,6 @@ updateButtons.forEach(updateButton => {
     });
 });
 
-
-
 const clearCart = async () => {
   try {
     const response = await fetch(`/api/carts/cart`, {
@@ -69,3 +67,26 @@ removeProductButtons.forEach(removeButton => {
     }
   });
 });
+
+//FINALIZAR COMPRA
+
+const checkoutButton = document.getElementById('finalizar-compra');
+
+checkoutButton.addEventListener('click', () => {
+  fetch('/api/carts/checkout', {
+    method: 'POST',
+    credentials: 'include',
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    window.location.href = '/confirm-checkout';
+  })
+  .catch(error => {
+    console.error('Error al realizar el checkout:', error);
+  })
+})
