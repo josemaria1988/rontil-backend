@@ -180,35 +180,55 @@ updateCartWithProducts = async (uid, newProducts) => {
     }
   };
 
-  checkout = async (uid) => {
-    try {
-
-      const cart = await this.getCart(uid)
-      
-      if (!cart || cart.items.length === 0) {
-        throw new Error ('El carrito está vacío');
-      }
-      
-      let total = 0;
-      for (let item of cart.items) {
-        const product = await productService.getProductById(item.product);
-        if (product.stock < item.quantity) {
-          throw new Error (`No hay suficiente stock para el producto ${product.title}`)
-        }
-        await productService.updateStock(product._id, item.quantity)
+  checkout = async (userId) => {
+    const cart = await this.getCart(userId);
+    const availableProducts = [];
+    const missingProducts = [];
+    let total = 0;
+  
+    for (const item of cart.items) {
+      const product = await productService.getProductById(item.product);
+      if (item.quantity <= product.stock) {
+        availableProducts.push({
+          id: product._id,
+          title: product.title,
+          quantity: item.quantity,
+          price: product.price
+        });
         total += item.quantity * product.price;
+        await productService.updateStock(item.product, item.quantity)
+        await this.clearCart(userId)
+      } else {
+        missingProducts.push({
+          title: product.title,
+          quantity: item.quantity - product.stock
+        });
       }
-      
-      await this.clearCart(uid)
-      
-      return total
-    } catch (error) {
-      console.error(error);
-      throw new Error('Error al realizar el checkout: ' + error.message);
     }
-
-
+  
+    return { availableProducts, total, missingProducts };
   }
+
+  purchaseCart = async (userId, cartId) => {
+    const cart = await this.getCart(userId);
+    const purchasedProducts = [];
+    const notPurchasedProducts = [];
+  
+    for (const item of cart.items) {
+      const product = await productService.getProductById(item.product);
+  
+      if (item.quantity <= product.stock) {
+        product.stock -= item.quantity;
+        await productService.updateProduct(product._id, product);
+        purchasedProducts.push(product);
+      } else {
+        notPurchasedProducts.push(product);
+      }
+    }
+  
+    return { purchasedProducts, notPurchasedProducts };
+  };
+
 }
 
 export default CartService;

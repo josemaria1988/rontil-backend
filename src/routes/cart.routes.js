@@ -13,5 +13,6 @@ router.delete('/cart/:pid', isAuthenticated, cartController.deleteProductFromCar
 router.delete('/cart', isAuthenticated, cartController.clearCart);
 router.get('/all', isAdmin, cartController.getAllCarts);
 router.post('/checkout', isAuthenticated, cartController.checkout);
+router.post('/:cid/purchase', cartController.purchaseCart);
 
 export default router;

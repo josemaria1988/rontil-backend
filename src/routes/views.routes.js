@@ -8,6 +8,7 @@ const viewController = new ViewsController();
 router.get("/", viewController.getHome);
 router.get('/products', isAuthenticated, viewController.getProducts);
 router.get('/products/:pid', isAuthenticated, viewController.getProductById);
+router.get("/auth/login", viewController.getLogin);
 router.get("/auth/current", isAuthenticated, viewController.getCurrentUser);
 router.get("/cart", isAuthenticated, viewController.getCart);
 router.get("/all-carts", isAuthenticated, isAdmin, viewController.getAllCarts)

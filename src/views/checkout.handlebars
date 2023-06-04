@@ -1,1 +1,27 @@
-<h1>GRACIAS POR COMPRARME</h1>
+<h1>Confirmation</h1>
+
+<h2>Available Products</h2>
+<ul>
+  {{#each products}}
+    <li>
+      Product: {{this.title}}
+      Quantity: {{this.quantity}}
+      Price: {{this.price}}
+    </li>
+  {{/each}}
+</ul>
+
+<h2>Missing Products</h2>
+<ul>
+  {{#each missingProducts}}
+    <li>
+      Product: {{this.title}}
+      Missing Quantity: {{this.quantity}}
+    </li>
+  {{/each}}
+</ul>
+
+<h2>Total</h2>
+<p>Total: {{total}}</p>
+<button>Confirmar Pago</button>
+<button>Cancelar</button>

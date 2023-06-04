@@ -7,6 +7,7 @@ const productController = new ProductsController();
 const cartController = new CartsController();
 
 class ViewsController {
+  constructor() {}
 
   getHome = async (req, res) => {
     const products = JSON.parse(JSON.stringify(await productController.getProducts(req)));
@@ -19,6 +20,10 @@ class ViewsController {
     }
     res.render("home", { products: products.docs, user: req.user, cartId: cartId, style: "styles.css", title: "Products" });
   };
+
+  getLogin  = async  (req, res) => {
+    res.render("login", {style: "styles.css", title: "Login"})
+  }
 
   getProducts = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
@@ -101,7 +106,10 @@ class ViewsController {
   };
 
   checkout = async (req, res) => {
-        res.render("checkout", { style: "styles.css", title: "Confirmation", user: req.user });
+    const uid = req.user._id
+    const { availableProducts, missingProducts, total } = await cartController.checkout(uid)
+    console.log(availableProducts)
+        res.render("checkout", { products: availableProducts, missingProduct: missingProducts, total: total, style: "styles.css", title: "Confirmation", user: req.user });
     };
 }
 

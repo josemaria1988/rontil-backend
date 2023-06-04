@@ -84,9 +84,15 @@ checkoutButton.addEventListener('click', () => {
     return response.json();
   })
   .then(data => {
-    window.location.href = '/confirm-checkout';
+    if (data.error) {
+      const missingProducts = data.missingProducts.map(item => `${item.product}: faltan ${item.quantity} unidades`).join(', ');
+      alert(`No hay suficiente stock para los siguientes productos: ${missingProducts}`);
+    } else {
+      window.location.href = '/confirm-checkout';
+    }
   })
   .catch(error => {
     console.error('Error al realizar el checkout:', error);
+    alert("Error al realizar el checkout, faltan unidades en stock");
   })
 })

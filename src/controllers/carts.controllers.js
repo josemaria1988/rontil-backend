@@ -1,5 +1,6 @@
 import CartService from '../services/carts.services.js';
 import ProductService from '../services/products.services.js';
+import Ticket from '../dao/schemas/ticket.model.js';
 
 class CartController {
   constructor() {
@@ -21,16 +22,16 @@ class CartController {
   createCart = async (req, res) => {
     try {
       const { productId, quantity } = req.body;
-  
+
       const product = await this.productService.getProductById(productId);
       if (!product) {
         res.status(404).json({ message: "Producto no encontrado" });
         return;
       }
-  
+
       const price = product.price;
       const newCart = await this.cartService.createCart(req.user._id, productId, price, quantity);
-  
+
       res.status(201).json(newCart);
     } catch (error) {
       console.error(error);
@@ -56,7 +57,7 @@ class CartController {
       const uid = req.user._id;
       const pid = req.params.pid;
       const { quantity } = req.body;
-  
+
       const updatedCart = await this.cartService.updateProductQuantity(uid, pid, quantity);
       res.status(200).json(updatedCart);
     } catch (error) {
@@ -80,7 +81,7 @@ class CartController {
     try {
       const uid = req.user._id;
       const updatedCart = await this.cartService.clearCart(uid);
-  
+
       res.status(200).json({
         status: 'success',
         message: 'Todos los productos eliminados del carrito',
@@ -107,13 +108,43 @@ class CartController {
   checkout = async (req, res) => {
     try {
       const userId = req.user._id;
-      const total = await this.cartService.checkout(userId);
-      res.json({ total: total });
+      const { availableProducts, total, missingProducts } = await this.cartService.checkout(userId);
+      
+      res.json({ availableProducts: availableProducts, missingProducts: missingProducts, total: total });
+      
     } catch (error) {
       console.error(error);
       res.status(500).send(error.message);
     }
   }
+
+  purchaseCart = async (req, res) => {
+    try {
+      const cartId = req.params.cid;
+      const userId = req.user._id;
+  
+      // Verificar el stock y procesar la compra
+      const { purchasedProducts, notPurchasedProducts } = await this.cartService.purchaseCart(userId, cartId);
+  
+      // Generar el ticket con los datos de la compra
+      const ticket = await this.ticketService.generateTicket({
+        purchaser: req.user.email,
+        amount: purchasedProducts.reduce((total, product) => total + (product.quantity * product.price), 0),
+      });
+  
+      // Actualizar el carrito con los productos que no pudieron comprarse
+      await this.cartService.updateCartProducts(userId, cartId, notPurchasedProducts);
+  
+      res.status(200).json({
+        ticket: ticket,
+        notPurchasedProducts: notPurchasedProducts.map((product) => product._id),
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al finalizar la compra' });
+    }
+  };
+
 }
 
 export default CartController;
