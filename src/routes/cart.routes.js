@@ -15,6 +15,6 @@ router.delete('/cart/:pid', isAuthenticated, cartController.deleteProductFromCar
 router.delete('/cart', isAuthenticated, cartController.clearCart);
 router.get('/all', isAdmin, cartController.getAllCarts);
 router.get('/:cid/checkout', isAuthenticated, cartController.checkout);
-router.get('/:cid/checkout/confirmation', isAuthenticated, ticketsController.generateTicket);
+router.post('/:cid/checkout/confirmation', isAuthenticated, ticketsController.generateTicket);
 
 export default router;

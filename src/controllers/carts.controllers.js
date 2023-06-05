@@ -107,9 +107,10 @@ class CartController {
   checkout = async (req, res) => {
     try {
       const uid = req.user._id;
+      const cid = await this.cartService.getCart(uid)
       const { availableProducts, total, missingProducts } = await this.cartService.checkout(uid);
       
-      res.json({ availableProducts: availableProducts, missingProducts: missingProducts, total: total });
+      res.json({ cid: cid._id, availableProducts: availableProducts, missingProducts: missingProducts, total: total });
       
     } catch (error) {
       console.error(error);

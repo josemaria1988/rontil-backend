@@ -8,7 +8,9 @@ class TicketController {
     generateTicket = async (req, res) => {
       try {
         const ticketData = req.body;
-        const ticket = await ticketService.generateTicket(ticketData);
+        const userId = req.user._id
+        ticketData.purchaser = userId;
+        const ticket = await this.ticketService.generateTicket(ticketData);
         res.json({ ticket: ticket });
       } catch (error) {
         console.error(error);

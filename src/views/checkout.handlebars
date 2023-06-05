@@ -1,8 +1,11 @@
-<h1>Confirmation</h1>
+<h1>Confirmation of purchase in cart: {{cid}}</h1>
 
 <h2>Available Products</h2>
 <ul>
   {{#each products}}
+  <li>
+    Id: <p class="product-id">{{this._id}}</p>
+  </li>
   <li>
     Product: {{this.title}}
   </li>
@@ -12,12 +15,12 @@
   <li>
     Price: {{this.price}}
   </li>
-  {{/each}}
 </ul>
+  {{/each}}
 
 
 <h2>Total</h2>
-<p>Total: {{total}}</p>
+<p id="totalAmount">Total: {{total}}</p>
 <button id="confirm">Confirmar Pago</button>
 <button id="cancel">Cancelar</button>
 

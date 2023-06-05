@@ -107,9 +107,10 @@ class ViewsController {
 
   checkout = async (req, res) => {
     const uid = req.user._id
+    const cid = await cartController.getCart(uid)
     const { availableProducts, missingProducts, total } = await cartController.checkout(uid)
     console.log(availableProducts)
-        res.render("checkout", { products: availableProducts, missingProducts: missingProducts, total: total, style: "styles.css", title: "Confirmation", user: req.user });
+        res.render("checkout", { cid: cid._id, products: availableProducts, missingProducts: missingProducts, total: total, style: "styles.css", title: "Confirmation", user: req.user });
     };
 
     getTicket = async (req, res) => {
