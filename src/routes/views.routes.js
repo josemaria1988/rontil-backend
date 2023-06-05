@@ -12,6 +12,7 @@ router.get("/auth/login", viewController.getLogin);
 router.get("/auth/current", isAuthenticated, viewController.getCurrentUser);
 router.get("/cart", isAuthenticated, viewController.getCart);
 router.get("/all-carts", isAuthenticated, isAdmin, viewController.getAllCarts)
-router.get("/confirm-checkout", isAuthenticated, viewController.checkout);
+router.get("/checkout", isAuthenticated, viewController.checkout);
+router.get('/ticket', isAuthenticated, viewController.getTicket);
 
 export default router;

@@ -1,6 +1,5 @@
 import CartService from '../services/carts.services.js';
 import ProductService from '../services/products.services.js';
-import Ticket from '../dao/schemas/ticket.model.js';
 
 class CartController {
   constructor() {
@@ -107,8 +106,8 @@ class CartController {
 
   checkout = async (req, res) => {
     try {
-      const userId = req.user._id;
-      const { availableProducts, total, missingProducts } = await this.cartService.checkout(userId);
+      const uid = req.user._id;
+      const { availableProducts, total, missingProducts } = await this.cartService.checkout(uid);
       
       res.json({ availableProducts: availableProducts, missingProducts: missingProducts, total: total });
       
@@ -117,33 +116,6 @@ class CartController {
       res.status(500).send(error.message);
     }
   }
-
-  purchaseCart = async (req, res) => {
-    try {
-      const cartId = req.params.cid;
-      const userId = req.user._id;
-  
-      // Verificar el stock y procesar la compra
-      const { purchasedProducts, notPurchasedProducts } = await this.cartService.purchaseCart(userId, cartId);
-  
-      // Generar el ticket con los datos de la compra
-      const ticket = await this.ticketService.generateTicket({
-        purchaser: req.user.email,
-        amount: purchasedProducts.reduce((total, product) => total + (product.quantity * product.price), 0),
-      });
-  
-      // Actualizar el carrito con los productos que no pudieron comprarse
-      await this.cartService.updateCartProducts(userId, cartId, notPurchasedProducts);
-  
-      res.status(200).json({
-        ticket: ticket,
-        notPurchasedProducts: notPurchasedProducts.map((product) => product._id),
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error al finalizar la compra' });
-    }
-  };
 
 }
 

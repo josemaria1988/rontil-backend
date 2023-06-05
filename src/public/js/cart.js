@@ -71,10 +71,11 @@ removeProductButtons.forEach(removeButton => {
 //FINALIZAR COMPRA
 
 const checkoutButton = document.getElementById('finalizar-compra');
+const cid = document.querySelector('#cartId').textContent;
 
 checkoutButton.addEventListener('click', () => {
-  fetch('/api/carts/checkout', {
-    method: 'POST',
+  fetch(`/api/carts/${cid}/checkout`, {
+    method: 'GET',
     credentials: 'include',
   })
   .then(response => {
@@ -84,15 +85,15 @@ checkoutButton.addEventListener('click', () => {
     return response.json();
   })
   .then(data => {
-    if (data.error) {
-      const missingProducts = data.missingProducts.map(item => `${item.product}: faltan ${item.quantity} unidades`).join(', ');
+    if (data.missingProducts && data.missingProducts.length > 0) {
+      const missingProducts = data.missingProducts.map(item => `${item.title}: faltan ${item.quantity} unidades`).join(', ');
       alert(`No hay suficiente stock para los siguientes productos: ${missingProducts}`);
-    } else {
-      window.location.href = '/confirm-checkout';
     }
+    // Independientemente de si hay productos faltantes, redirigimos a la página de checkout
+    window.location.href = '/checkout';
   })
   .catch(error => {
     console.error('Error al realizar el checkout:', error);
-    alert("Error al realizar el checkout, faltan unidades en stock");
+    alert("Error al realizar el checkout, por favor intente de nuevo más tarde.");
   })
 })

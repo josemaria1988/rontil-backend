@@ -3,25 +3,34 @@
 <h2>Available Products</h2>
 <ul>
   {{#each products}}
-    <li>
-      Product: {{this.title}}
-      Quantity: {{this.quantity}}
-      Price: {{this.price}}
-    </li>
+  <li>
+    Product: {{this.title}}
+  </li>
+  <li>
+    Quantity: {{this.quantity}}
+  </li>
+  <li>
+    Price: {{this.price}}
+  </li>
   {{/each}}
 </ul>
+
+
+<h2>Total</h2>
+<p>Total: {{total}}</p>
+<button id="confirm">Confirmar Pago</button>
+<button id="cancel">Cancelar</button>
 
 <h2>Missing Products</h2>
 <ul>
   {{#each missingProducts}}
-    <li>
-      Product: {{this.title}}
-      Missing Quantity: {{this.quantity}}
-    </li>
-  {{/each}}
+  <li>
+    Product: {{this.title}}
+  </li>
+  <li>
+    Missing Quantity: {{this.quantity}}
+  </li>
 </ul>
+  {{/each}}
 
-<h2>Total</h2>
-<p>Total: {{total}}</p>
-<button>Confirmar Pago</button>
-<button>Cancelar</button>
+   <script src="/js/checkout.js"></script>

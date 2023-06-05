@@ -10,16 +10,21 @@ const ticketSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  products: [
+    {
+      product: { type: mongoose.Schema.Types.ObjectId, ref: 'products' },
+      quantity: { type: Number, required: true },
+      price: { type: Number, required: true },
+    },
+  ],
   amount: {
     type: Number,
     required: true,
   },
   purchaser: {
-    type: String,
-    required: true,
-  },
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Users',
+  }
 });
 
-const Ticket = mongoose.model('Ticket', ticketSchema);
-
-export default Ticket;
+export default ticketSchema;

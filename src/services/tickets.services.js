@@ -3,12 +3,13 @@ import ticketsRepository from '../dao/repositories/tickets.repository.js'
 class TicketService {
   generateTicket = async (ticketData) => {
     try {
-      const { purchaser, amount } = ticketData;
+      const { purchaser, amount, availableProducts } = ticketData;
 
       const ticket = new ticketsRepository({
         code: generateUniqueCode(),
         purchaser: purchaser,
         amount: amount,
+        products: availableProducts
       });
 
       const savedTicket = await ticket.save();

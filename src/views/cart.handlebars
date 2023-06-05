@@ -4,7 +4,7 @@
   <p id="cartId">{{cid}}</p>
     {{#each cart.items}}
       <div class="cart-item">
-        <img src="{{this.product.image}}" alt="{{this.product.title}}">
+        <img src="{{this.image}}" alt="{{this.title}}">
         <div class="cart-item-info">
           <h3 class="cart-product-title">{{this.product.title}}</h3>
           <p>{{this.product.description}}</p>
@@ -21,7 +21,7 @@
     <div class="cart-product-total">
       <p>Total a pagar: {{cart.totalPrice}}€</p>
       <button id="clearCart" class="clear-cart">Vaciar carrito</button>
-      <button id="finalizar-compra" class="checkout">Finalizar Compra</button>
+      <button id="finalizar-compra" class="checkout">Ir a Checkout</button>
     </div>
   {{else}}
     <p>No hay productos en el carrito</p>

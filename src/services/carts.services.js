@@ -9,7 +9,7 @@ class CartService {
   //OBTENER CARRITO
   getCart = async (uid) => {
     try {
-      let cart = await cartRepository.findOne({ user: uid });
+      let cart = await cartRepository.findOne({ user: uid }).populate('items.product');
       if (!cart) {
         console.log("Carrito no encontrado, creando uno nuevo.");
         cart = await this.createEmptyCart(uid);
@@ -188,6 +188,8 @@ updateCartWithProducts = async (uid, newProducts) => {
   
     for (const item of cart.items) {
       const product = await productService.getProductById(item.product);
+  
+      //Guardar productos con cantidad disponible y restarlos del stock
       if (item.quantity <= product.stock) {
         availableProducts.push({
           id: product._id,
@@ -195,39 +197,35 @@ updateCartWithProducts = async (uid, newProducts) => {
           quantity: item.quantity,
           price: product.price
         });
+        console.log("productos disponibles: ", availableProducts)
         total += item.quantity * product.price;
-        await productService.updateStock(item.product, item.quantity)
-        await this.clearCart(userId)
-      } else {
+        await productService.updateStock(item.product, item.quantity);
+      }
+      
+        if (product.stock > 0 && product.stock < item.quantity) {
+        // Ajustar la cantidad al stock disponible de los productos a los que les falte unidades para completar
+        availableProducts.push({
+          id: product._id,
+          title: product.title,
+          quantity: product.stock,
+          price: product.price
+        });
+        total += product.stock * product.price;
+        await productService.updateStock(item.product, product.stock);
+      }
+      
+        if (product.stock === 0){
+        //Guardar aparte los productos y las cantidades que no hay en stock.
         missingProducts.push({
           title: product.title,
           quantity: item.quantity - product.stock
         });
+        console.log("missingProducts:", missingProducts)
       }
     }
-  
-    return { availableProducts, total, missingProducts };
+    const response = {availableProducts, missingProducts, total}
+    return response
   }
-
-  purchaseCart = async (userId, cartId) => {
-    const cart = await this.getCart(userId);
-    const purchasedProducts = [];
-    const notPurchasedProducts = [];
-  
-    for (const item of cart.items) {
-      const product = await productService.getProductById(item.product);
-  
-      if (item.quantity <= product.stock) {
-        product.stock -= item.quantity;
-        await productService.updateProduct(product._id, product);
-        purchasedProducts.push(product);
-      } else {
-        notPurchasedProducts.push(product);
-      }
-    }
-  
-    return { purchasedProducts, notPurchasedProducts };
-  };
 
 }
 
