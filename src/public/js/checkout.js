@@ -1,3 +1,5 @@
+document.addEventListener('DOMContentLoaded', () => {
+
 const confirmButton = document.getElementById('confirm');
 const cancelButton = document.getElementById('cancel');
 const productElements = document.querySelectorAll('.product-id');
@@ -34,3 +36,9 @@ confirmButton.addEventListener('click', async () => {
       console.error('Error al generar el ticket:', error);
     }
   });
+
+  cancelButton.addEventListener('click', async () => {
+    
+  })
+
+});

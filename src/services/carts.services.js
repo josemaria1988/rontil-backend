@@ -197,7 +197,6 @@ updateCartWithProducts = async (uid, newProducts) => {
           quantity: item.quantity,
           price: product.price
         });
-        console.log("productos disponibles: ", availableProducts)
         total += item.quantity * product.price;
         await productService.updateStock(item.product, item.quantity);
       }
@@ -220,7 +219,6 @@ updateCartWithProducts = async (uid, newProducts) => {
           title: product.title,
           quantity: item.quantity - product.stock
         });
-        console.log("missingProducts:", missingProducts)
       }
     }
     const response = {availableProducts, missingProducts, total}

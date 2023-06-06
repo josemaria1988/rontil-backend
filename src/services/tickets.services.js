@@ -1,4 +1,5 @@
 import ticketsRepository from '../dao/repositories/tickets.repository.js'
+import { v4 as uuidv4 } from 'uuid';
 
 class TicketService {
   generateTicket = async (ticketData) => {
@@ -6,7 +7,7 @@ class TicketService {
       const { purchaser, amount, availableProducts } = ticketData;
 
       const ticket = new ticketsRepository({
-        code: generateUniqueCode(),
+        code: uuidv4(),
         purchaser: purchaser,
         amount: amount,
         products: availableProducts
