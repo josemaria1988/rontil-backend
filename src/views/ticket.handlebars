@@ -1,0 +1,26 @@
+<h1>Comprar realizada con éxito!</h1>
+
+{{#if ticket}}
+{{#each ticket}}
+<h2>Detalles del Ticket</h2>
+<p><strong>Código:</strong> {{this.code}}</p>
+<p><strong>Fecha y hora de la compra:</strong> {{this.purchase_datetime}}</p>
+<p><strong>Comprador:</strong> {{this.purchaser}}</p>
+
+<h3>Productos</h3>
+<ul>
+    {{#each this.products}}
+    <li>
+        <p><strong>ID del producto:</strong> {{this.product}}</p>
+        <p><strong>Cantidad:</strong> {{this.quantity}}</p>
+        <p><strong>Precio:</strong> {{this.price}}</p>
+    </li>
+    {{/each}}
+</ul>
+
+<p><strong>Monto total:</strong> {{this.amount}}</p>
+{{/each}}
+
+{{else}}
+<p>No se ha encontrado ningún ticket.</p>
+{{/if}}

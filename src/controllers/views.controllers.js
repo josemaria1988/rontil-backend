@@ -2,9 +2,11 @@ import ProductsController from '../services/products.services.js';
 import CartsController from "../services/carts.services.js";
 import cartRepository from "../dao/repositories/carts.repository.js";
 import GetCurrentUserDTO from '../dto/user.dto.js';
+import TicketService from '../services/tickets.services.js';
 
 const productController = new ProductsController();
 const cartController = new CartsController();
+const ticketService = new TicketService();
 
 class ViewsController {
   constructor() {}
@@ -114,7 +116,9 @@ class ViewsController {
     };
 
     getTicket = async (req, res) => {
-      return
+      const userEmail = req.user.email;
+      const ticket = await ticketService.getTicket(userEmail);
+      res.render("ticket", { ticket: ticket, style: "styles.css", title: "Ticket", user: req.user} )
     }
 }
 

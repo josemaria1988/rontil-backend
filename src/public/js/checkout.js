@@ -9,33 +9,34 @@ const total = parseFloat(totalText.split(': ')[1]);
 const cid = document.getElementById('cartId').textContent.split(' ')[5];
 
 confirmButton.addEventListener('click', async () => {
-    try {
-      const ticketData = {
-        products: availableProducts,
-        purchaser: '',
-        amount: total,
-      };
+  try {
+    const ticketData = {
+      products: availableProducts,
+      purchaser: '',
+      amount: total,
+    };
+  
+    const response = await fetch(`/api/carts/${cid}/checkout/confirmation`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json"},
+      credentials: 'include',
+      body: JSON.stringify(ticketData)
+    })
     
-      const response = await fetch(`/api/carts/${cid}/checkout/confirmation`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json"},
-        credentials: 'include',
-        body: JSON.stringify(ticketData)
-      })
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const responseData = await response.json();
-      console.log('Ticket generado:', responseData.ticket);
-  
-      // Redirige al usuario a la página de confirmación, o muestra un mensaje de éxito, etc.
-  
-    } catch (error) {
-      console.error('Error al generar el ticket:', error);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  });
+    
+    const responseData = await response.json();
+    console.log('Ticket generado:', responseData.ticket);
+
+    // Redirige al usuario a la página del ticket.
+    window.location.href = `/ticket`;
+
+  } catch (error) {
+    console.error('Error al generar el ticket:', error);
+  }
+});
 
   cancelButton.addEventListener('click', async () => {
     

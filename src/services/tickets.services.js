@@ -20,6 +20,16 @@ class TicketService {
       throw new Error('Error al generar el ticket');
     }
   };
+
+  getTicket = async (userEmail) => {
+    try {
+      const ticket = await ticketsRepository.findOne({purchaser: userEmail});
+      return ticket
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 export default TicketService;

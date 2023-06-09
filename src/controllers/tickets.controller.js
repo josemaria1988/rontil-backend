@@ -1,16 +1,19 @@
 import TicketService from '../services/tickets.services.js';
+import CartService from '../services/carts.services.js';
 
 class TicketController {
     constructor () {
         this.ticketService = new TicketService();
+        this.cartService = new CartService();
     }
     
     generateTicket = async (req, res) => {
       try {
         const ticketData = req.body;
-        const userId = req.user._id
-        ticketData.purchaser = userId;
+        const userEmail = req.user.email;
+        ticketData.purchaser = userEmail;
         const ticket = await this.ticketService.generateTicket(ticketData);
+        await this.cartService.clearCart(req.user._id)
         res.json({ ticket: ticket });
       } catch (error) {
         console.error(error);
