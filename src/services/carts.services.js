@@ -189,7 +189,7 @@ updateCartWithProducts = async (uid, newProducts) => {
     for (const item of cart.items) {
       const product = await productService.getProductById(item.product);
   
-      //Guardar productos con cantidad disponible y restarlos del stock
+      // If there is enough stock
       if (item.quantity <= product.stock) {
         availableProducts.push({
           id: product._id,
@@ -199,30 +199,29 @@ updateCartWithProducts = async (uid, newProducts) => {
         });
         total += item.quantity * product.price;
         await productService.updateStock(item.product, item.quantity);
-      }
-      
-        if (product.stock > 0 && product.stock < item.quantity) {
-        // Ajustar la cantidad al stock disponible de los productos a los que les falte unidades para completar
-        availableProducts.push({
-          id: product._id,
-          title: product.title,
-          quantity: product.stock,
-          price: product.price
-        });
-        total += product.stock * product.price;
-        await productService.updateStock(item.product, product.stock);
-      }
-      
-        if (product.stock === 0){
-        //Guardar aparte los productos y las cantidades que no hay en stock.
+      } else {
+        // If there is some stock but not enough
+        if (product.stock > 0) {
+          availableProducts.push({
+            id: product._id,
+            title: product.title,
+            quantity: product.stock,
+            price: product.price
+          });
+          total += product.stock * product.price;
+          await productService.updateStock(item.product, product.stock);
+        }
+  
+        // Record missing products
         missingProducts.push({
           title: product.title,
           quantity: item.quantity - product.stock
         });
       }
     }
+  
     const response = {availableProducts, missingProducts, total}
-    return response
+    return response;
   }
 
 }

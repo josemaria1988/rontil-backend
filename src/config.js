@@ -16,7 +16,12 @@ const config = {
 
   googleClient: process.env.GOOGLE_CLIENT_ID,
   googleSecret: process.env.GOOGLE_CLIENT_SECRET,
-  googleCallBack: process.env.GOOGLE_CALLBACK_URL
+  googleCallBack: process.env.GOOGLE_CALLBACK_URL,
+
+  nodemailerService: process.env.NODEMAILER_SERVICE,
+  nodemailerPort: process.env.NODEMAILER_PORT,
+  nodemailerUser: process.env.NODEMAILER_USER,
+  nodemailerPass: process.env.NODEMAILER_PASSWORD,
 };
 
 export default config;
