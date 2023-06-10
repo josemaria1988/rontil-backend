@@ -26,7 +26,7 @@ class EmailService {
       `;
     });
   
-    const info = await this.transporter.sendMail({
+    const info = this.transporter.sendMail({
       from: config.nodemailerUser,
       to: purchaser,
       subject: subject,
@@ -41,7 +41,6 @@ class EmailService {
       `,
       attachment: []
     });
- 
 
     console.log("Message sent: %s", info.messageId);
   };

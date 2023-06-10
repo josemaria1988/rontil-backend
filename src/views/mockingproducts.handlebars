@@ -1,0 +1,28 @@
+ <hi>Bienvenido {{user.first_name}} ID: {{user._id}}</hi>
+<div>
+{{#each products}}
+    <div class="gallery" id="product">
+        <a href="/mocking/{{this.id}}">
+        <h2>{{this.title}}</h2>
+        <p>{{this.description}}</p>
+        <p>{{this.price}}</p>
+        </a>
+        <button class="add-to-cart" data-product-id="{{this.id}}" data-price="{{this.price}}" data-uid="{{user._id}}">Agregar al carrito</button>
+    </div>
+{{/each}}
+</div>
+
+
+<!-- Mostrar la información de la página actual -->
+<p>Página {{page}} de {{totalPages}}</p>
+
+<!-- Botones para ir a la página anterior y siguiente -->
+{{#if prevPage}}
+  <a href="/mockingproducts?page={{prevPage}}&limit=10">Anterior</a>
+{{/if}}
+
+{{#if nextPage}}
+  <a href="/mockingproducts?page={{nextPage}}&limit=10">Siguiente</a>
+{{/if}}
+
+ <script src="/js/mocking.js"></script>

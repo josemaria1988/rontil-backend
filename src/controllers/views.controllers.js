@@ -81,7 +81,6 @@ class ViewsController {
   };
 
   getCart = async (req, res) => {
-    console.log("Inicio del controlador del carrito");
     try {
       const uid = req.user._id;
       const cart = await cartController.getCart(uid)

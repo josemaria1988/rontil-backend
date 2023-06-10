@@ -13,6 +13,7 @@ import passport from "passport";
 import initializePassport from "./auth/passport.js";
 import database from "./db.js";
 import { decodeToken } from "./utils.js";
+import mockingRouter from "./routes/mockingproducts.routes.js";
 
 // Initialization Express
 const app = express();
@@ -49,7 +50,6 @@ const hbs = expressHandlebars.create({
 app.engine("handlebars", hbs.engine);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
-console.log(`${__dirname}/views`);
 
 //User Sessions
 app.use(cookieParser());
@@ -63,6 +63,7 @@ app.use('/api/carts', cartsRouter);
 app.use('/chat', chatRouter);
 app.use("/", viewsRouter);
 app.use("/auth", sessionsRouter);
+app.use('/mockingproducts', mockingRouter);
 
 const httpServer = app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
