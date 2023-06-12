@@ -1,4 +1,6 @@
 import productsRepository from "../dao/repositories/products.repository.js";
+import { DatabaseError } from './errors/DatabaseError.js';
+import { NotFoundError } from './errors/NotFoundError.js';
 
 class ProductsServices {
   
@@ -31,7 +33,15 @@ class ProductsServices {
       const products = await productsRepository.paginate(query, { page, limit, sort: sortOrder });
       return products;
     } catch (error) {
-      console.log(error);
+      throw new DatabaseError({
+        message: 'Error buscando productos',
+        details: {
+          query: query,
+          sort: sortOrder,
+          pagination: {page, limit},
+          error: error.message,
+        },
+      });
     }
   }
 
@@ -56,8 +66,13 @@ class ProductsServices {
       const count = await productsRepository.countDocuments(filter);
       return count;
     } catch (error) {
-      console.log(error);
-      throw new Error('Error al contar los productos');
+      throw new DatabaseError({
+        message: 'Error contando productos',
+        details: {
+          query: query,
+          error: error.message,
+        }
+      });
     }
   };
 
@@ -66,16 +81,77 @@ class ProductsServices {
   };
 
   addProduct = async (productData) => {
-    const newProduct = new productsRepository(productData);
-    return await newProduct.save();
+    try {
+      const newProduct = new productsRepository(productData);
+      return await newProduct.save();
+    } catch (error) {
+      throw new DatabaseError({
+        message: 'Error añadiendo producto',
+        details: {
+          productData: productData,
+          error: error.message,
+        },
+      });
+    }
   };
 
   updateProduct = async (productId, productData) => {
-    return await productsRepository.findByIdAndUpdate(productId, productData, { new: true });
+    try {
+      const product = await productsRepository.findByIdAndUpdate(productId, productData, { new: true });
+  
+      if (!product) {
+        throw new NotFoundError({
+          message: 'Producto no encontrado',
+          details: {
+            productId: productId,
+          },
+        });
+      }
+  
+      return product;
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      } else {
+        throw new DatabaseError({
+          message: 'Error actualizando producto',
+          details: {
+            productId: productId,
+            productData: productData,
+            error: error.message,
+          },
+        });
+      }
+    }
   };
 
   deleteProduct = async (productId) => {
-    return await productsRepository.findByIdAndDelete(productId);
+    try {
+      const product = await productsRepository.findByIdAndDelete(productId);
+  
+      if (!product) {
+        throw new NotFoundError({
+          message: 'Producto no encontrado',
+          details: {
+            productId: productId,
+          },
+        });
+      }
+  
+      return product;
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      } else {
+        throw new DatabaseError({
+          message: 'Error eliminando producto',
+          details: {
+            productId: productId,
+            error: error.message,
+          },
+        });
+      }
+    }
   };
 
   updateStock = async (productId, quantity) => {
@@ -84,7 +160,12 @@ class ProductsServices {
       let product = await productsRepository.findById(productId);
 
       if (!product) {
-        throw new Error('Producto no encontrado');
+        throw new NotFoundError({
+          message: 'Producto no encontrado',
+          details: {
+            productId: productId
+          }
+        });
       }
 
       // Actualizar el stock
@@ -99,8 +180,14 @@ class ProductsServices {
 
       return product;
     } catch (error) {
-      console.error(error);
-      throw error;
+      throw new DatabaseError({
+        message: 'Error actualizando el stock del producto',
+        details: {
+          productId: productId,
+          quantity: quantity,
+          error: error.message,
+        },
+      });
     }
   }
 }

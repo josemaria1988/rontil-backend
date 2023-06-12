@@ -14,6 +14,7 @@ import initializePassport from "./auth/passport.js";
 import database from "./db.js";
 import { decodeToken } from "./utils.js";
 import mockingRouter from "./routes/mockingproducts.routes.js";
+import { errorMiddleware } from './middlewares/errorMiddleware.js';
 
 // Initialization Express
 const app = express();
@@ -64,6 +65,7 @@ app.use('/chat', chatRouter);
 app.use("/", viewsRouter);
 app.use("/auth", sessionsRouter);
 app.use('/mockingproducts', mockingRouter);
+app.use(errorMiddleware);
 
 const httpServer = app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
