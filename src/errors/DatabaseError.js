@@ -1,10 +1,10 @@
 import CustomError from './CustomErrors.js'
 
 export class DatabaseError extends CustomError {
-    constructor(details) {
+    constructor(name, message, details) {
         super({
-            name: 'DatabaseError',
-            message: 'An error occurred with the database.',
+            name,
+            message,
             code: 3,
             details
         });

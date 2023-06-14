@@ -1,6 +1,7 @@
 import productsRepository from "../dao/repositories/products.repository.js";
-import { DatabaseError } from './errors/DatabaseError.js';
-import { NotFoundError } from './errors/NotFoundError.js';
+import { DatabaseError } from '../errors/DatabaseError.js';
+import { NotFoundError } from '../errors/NotFoundError.js';
+import { ErrorNames, ErrorMessages, ErrorCauses } from '../errors/errors.enum.js';
 
 class ProductsServices {
   
@@ -34,7 +35,8 @@ class ProductsServices {
       return products;
     } catch (error) {
       throw new DatabaseError({
-        message: 'Error buscando productos',
+        name: ErrorMessages.PRODUCT_SEARCH_ERROR,
+        message: ErrorNames.PRODUCT_SEARCH_MESSAGE,
         details: {
           query: query,
           sort: sortOrder,
@@ -67,7 +69,8 @@ class ProductsServices {
       return count;
     } catch (error) {
       throw new DatabaseError({
-        message: 'Error contando productos',
+        name: ErrorNames.PRODUCT_SEARCH_ERROR,
+        message: ErrorMessages.PRODUCT_SEARCH_MESSAGE,
         details: {
           query: query,
           error: error.message,
@@ -86,7 +89,8 @@ class ProductsServices {
       return await newProduct.save();
     } catch (error) {
       throw new DatabaseError({
-        message: 'Error añadiendo producto',
+        name: ErrorNames.DATABASE_WRITE_ERROR,
+        message: ErrorMessages.DATABASE_WRITE_MESSAGE,
         details: {
           productData: productData,
           error: error.message,
