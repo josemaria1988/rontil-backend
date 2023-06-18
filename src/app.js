@@ -15,6 +15,7 @@ import database from "./db.js";
 import { decodeToken } from "./utils.js";
 import mockingRouter from "./routes/mockingproducts.routes.js";
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
+import loggerRouter from './routes/logger.routes.js';
 
 // Initialization Express
 const app = express();
@@ -65,6 +66,7 @@ app.use('/chat', chatRouter);
 app.use("/", viewsRouter);
 app.use("/auth", sessionsRouter);
 app.use('/mockingproducts', mockingRouter);
+app.use('/loggerTest', loggerRouter);
 app.use(errorMiddleware);
 
 const httpServer = app.listen(port, () => {

@@ -1,3 +1,5 @@
+import CustomError from '../errors/CustomErrors.js'
+
 export function errorMiddleware(err, req, res, next) {
     if (err instanceof CustomError) {
         res.status(err.code).json({
