@@ -1,5 +1,10 @@
 import dotenv from "dotenv";
-dotenv.config();
+
+const environment = "DEVELOPMENT";
+
+dotenv.config({
+  path: environment === "PRODUCTION" ?  "./.env.production" : "./.env.development",
+});
 
 const config = {
   dbName: process.env.DB_NAME,
