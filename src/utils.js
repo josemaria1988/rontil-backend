@@ -3,11 +3,13 @@ import { dirname } from "path";
 import bcrypt from "bcrypt";
 import CartsServices from "./services/carts.services.js";
 import UsersServices from "./services/users.services.js";
+import ProductsServices from "./services/products.services.js";
 import jwt from "jsonwebtoken";
 import config from "./config.js";
 
 const cartManager = new CartsServices();
 const userManager = new UsersServices();
+const productManager = new ProductsServices();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -70,6 +72,15 @@ export const isAdmin = (req, res, next) => {
   } else {
     res.status(403).json({ message: "Acceso denegado. No eres un administrador." });
   }
+};
+
+//Verificar si el producto es del usuario premium:
+export const isProductOwner = async (req, res, next) => {
+  const product = await productManager.getProductById(req.params.productId);
+  if(product.owner === req.user.email) {
+    return res.status(403).json({ message: "No puedes agregar tus propios productos al carrito." });
+  }
+  next();
 };
 
 export default __dirname;
