@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from "passport";
 import UserController from '../controllers/users.controllers.js';
-import { isAuthenticated } from '../utils.js';
+import { isAuthenticated, isAdmin } from '../utils.js';
 
 const router = Router();
 const userController = new UserController();
@@ -15,5 +15,6 @@ router.get('/google', passport.authenticate('googlelogin', { scope: ['profile', 
 router.get('/github', passport.authenticate('githublogin'));
 router.get("/githubcallback", passport.authenticate('githublogin', { failureRedirect: '/login', session: false }), userController.generateTokenAfterGithubLogin);
 router.get("/googlecallback", passport.authenticate('googlelogin', { failureRedirect: '/login', session: false }), userController.generateTokenAfterGoogleLogin);
+router.patch('/premium/:uid', isAdmin, userController.changeUserRole);
 
 export default router;

@@ -13,9 +13,9 @@ class EmailService {
     });
   }
 
-  sendEmail = async (purchaser, subject, ticket) => {
+  sendPurchaseEmail = async (purchaser, subject, ticket) => {
     let productsHTML = '';
-  
+
     // Recorre el array de productos y genera el HTML para cada uno
     ticket.products.forEach(productObj => {
       const product = productObj.product;
@@ -25,21 +25,32 @@ class EmailService {
         <p>Precio: ${productObj.price}</p>
       `;
     });
-  
-    const info = this.transporter.sendMail({
+
+    const info = await this.transporter.sendMail({
       from: config.nodemailerUser,
       to: purchaser,
       subject: subject,
       html: `
         <h1> Muchas gracias por tu compra! </h1>
-  
+
         <h3> Aquí te dejamos el detalle de la misma </h3>
         <p> Codigo: ${ticket.code}</p>
         ${productsHTML}
         <p> Fecha: ${ticket.purchase_datetime}</p>
         <p> Monto: ${ticket.amount}</p>
       `,
-      attachment: []
+      attachments: [] // aquí parece que hubo un error de tipeo, debería ser 'attachments', no 'attachment'
+    });
+
+    console.log("Message sent: %s", info.messageId);
+  };
+
+  sendPasswordResetEmail = async (recipient, subject, htmlContent) => {
+    const info = await this.transporter.sendMail({
+      from: config.nodemailerUser,
+      to: recipient,
+      subject: 'Restablecimiento de contraseña',
+      html: htmlContent
     });
 
     console.log("Message sent: %s", info.messageId);

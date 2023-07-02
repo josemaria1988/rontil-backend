@@ -21,7 +21,7 @@ class TicketService {
       const populatedTicket = await ticketsRepository.findById(savedTicket._id).populate('products.product');
 
       // Enviar el correo electrónico con el ticket
-      await this.emailService.sendEmail(
+      await this.emailService.sendPurchaseEmail(
         purchaser,
         `Tu compra ha sido confirmada con éxito! Código de ticket ${populatedTicket.code}.`,
         populatedTicket

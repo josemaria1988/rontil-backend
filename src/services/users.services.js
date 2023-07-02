@@ -67,6 +67,21 @@ class UserService {
             return { status: "fail", message: "No se pudo actualizar la contraseña del usuario" }
         }
     }
+
+    changeUserRole = async (userId) => {
+        try {
+          const user = await userRepository.findById(userId);
+          if (!user) {
+            throw new Error("Usuario no encontrado");
+          }
+          user.role = user.role === 'user' ? 'premium' : 'user';
+          const updatedUser = await user.save();
+          return { status: "success", user: updatedUser };
+        } catch (error) {
+          console.error(error);
+          return { status: "fail", message: "No se pudo cambiar el rol del usuario" }
+        }
+      }
 }
 
 export default UserService;

@@ -81,7 +81,24 @@ class UserController {
     const user = req.user;
     const userDTO = new GetCurrentUserDTO(user)
     res.json(userDTO);
-  }
+  };
+
+  changeUserRole = async (req, res) => {
+    try {
+      const userId = req.params.uid;
+      const response = await this.userService.changeUserRole(userId);
+  
+      if (response.status === 'success') {
+        res.status(200).json({ message: 'Role changed successfully.' });
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: error.message });
+    }
+  };
+
 }
 
 export default UserController;
