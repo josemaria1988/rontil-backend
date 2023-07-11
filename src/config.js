@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 const environment = "DEVELOPMENT";
 
 dotenv.config({
-  path: environment === "PRODUCTION" ?  "./.env.production" : "./.env.development",
+  path: environment === "PRODUCTION" ? "./.env.production" : "./.env.development",
 });
 
 const config = {
@@ -15,7 +15,6 @@ const config = {
   jwtSecret: process.env.JWT_SECRET,
 
   githubClient: process.env.GITHUB_CLIENT_ID,
-  githubAPP: process.env.GITHUB_APP_ID,
   githubSecret: process.env.GITHUB_CLIENT_SECRET,
   githubCallBack: process.env.GITHUB_CALLBACK_URL,
 

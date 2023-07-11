@@ -5,17 +5,16 @@ import userRepository from "../dao/repositories/users.repository.js";
 import { createHash, isValidPassword } from "../utils.js";
 import config from "../config.js";
 import GoogleStrategy from "passport-google-oauth20";
-import jwt from "passport-jwt";
+import jwt from "jsonwebtoken";
 
-
-const { 
-  githubClient, 
-  githubSecret, 
-  githubCallBack, 
-  googleClient, 
-  googleSecret, 
+const {
+  githubClient,
+  githubSecret,
+  githubCallBack,
+  googleClient,
+  googleSecret,
   googleCallBack,
-  jwtSecret 
+  jwtSecret,
 } = config;
 
 const LocalStrategy = local.Strategy;
@@ -28,12 +27,12 @@ const cookieExtractor = (req) => {
     token = req.cookies["jwtCookie"];
   }
   return token;
-}
+};
 
 const jwtOptions = {
   secretOrKey: jwtSecret,
-  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor])
-}
+  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+};
 
 const initializePassport = () => {
   passport.use(
@@ -71,44 +70,50 @@ const initializePassport = () => {
     )
   );
 
-  passport.use("jwt", new JWTStrategy(jwtOptions, async (jwt_payload, done) => {
-    try {
-      return done(null, jwt_payload);
-    } catch (error) {
-      return done(error);
-    }
-  })),
-
-    //////////////////////////////// GITHUB LOGIN ////////////////////////////////
-    passport.use("githublogin", new GitHubStrategy({
-      clientID: githubClient,
-      clientSecret: githubSecret,
-      callbackURL: githubCallBack,
-    },
-    async (accessToken, refreshToken, profile, done) => {
+  passport.use(
+    "jwt",
+    new JWTStrategy(jwtOptions, async (jwt_payload, done) => {
       try {
-        let user = await userRepository.findOne({ email: profile._json.email });
-        
-        if (!user) {
-          let newUser = {
-            first_name: profile._json.name,
-            last_name: "",
-            age: 18,
-            email: profile._json.email,
-            password: "",
-          };
-
-          let result = await userRepository.create(newUser);
-          return done(null, result);
-        }
-
-        return done(null, user);
+        return done(null, jwt_payload);
       } catch (error) {
         return done(error);
       }
+    })
+  );
 
-    }))
-  
+  // GITHUB LOGIN
+  passport.use(
+    "githublogin",
+    new GitHubStrategy(
+      {
+        clientID: githubClient,
+        clientSecret: githubSecret,
+        callbackURL: githubCallBack,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          let user = await userRepository.findOne({ email: profile._json.email });
+
+          if (!user) {
+            let newUser = {
+              first_name: profile._json.name,
+              last_name: "",
+              age: 18,
+              email: profile._json.email,
+              password: "",
+            };
+
+            let result = await userRepository.create(newUser);
+            return done(null, result);
+          }
+
+          return done(null, user);
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
 
   passport.serializeUser((user, done) => {
     done(null, user._id);
@@ -119,34 +124,37 @@ const initializePassport = () => {
     done(null, user);
   });
 
-  ////////// GOOGLE LOGIN //////////
+  // GOOGLE LOGIN
+  passport.use(
+    "googlelogin",
+    new GoogleStrategy(
+      {
+        clientID: googleClient,
+        clientSecret: googleSecret,
+        callbackURL: googleCallBack,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          let user = await userRepository.findOne({ email: profile.emails[0].value });
 
-  passport.use( 'googlelogin', new GoogleStrategy( {
-    clientID: googleClient,
-    clientSecret: googleSecret,
-    callbackURL: googleCallBack
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      let user = await userRepository.findOne({email: profile.emails[0].value});
-
-      if (!user) {
-        let newUser = {
-          first_name: profile.name.givenName,
-          last_name: profile.name.familyName,
-          age: 18,
-          email: profile.emails[0].value,
-          password: "",
-        };
-        let result = await userRepository.create(newUser);
-        return done(null, result);
+          if (!user) {
+            let newUser = {
+              first_name: profile.name.givenName,
+              last_name: profile.name.familyName,
+              age: 18,
+              email: profile.emails[0].value,
+              password: "",
+            };
+            let result = await userRepository.create(newUser);
+            return done(null, result);
+          }
+          return done(null, user);
+        } catch (error) {
+          return done(error);
+        }
       }
-      return done(null, user);
-    } catch (error) {
-      return done(error);
-    }
-   
-  }))
+    )
+  );
 };
 
 export default initializePassport;
